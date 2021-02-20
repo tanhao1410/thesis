@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.tanhao1410.thesis.management.mapper.DeviceDOMapper">
+  <resultMap id="BaseResultMap" type="com.github.tanhao1410.thesis.management.domain.DeviceDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="group_id" jdbcType="BIGINT" property="groupId" />
+    <result column="ip" jdbcType="VARCHAR" property="ip" />
+    <result column="x" jdbcType="INTEGER" property="x" />
+    <result column="y" jdbcType="INTEGER" property="y" />
+    <result column="department" jdbcType="VARCHAR" property="department" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, group_id, ip, x, y, department
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from device
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from device
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.github.tanhao1410.thesis.management.domain.DeviceDO">
+    insert into device (id, name, group_id, 
+      ip, x, y, department
+      )
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{groupId,jdbcType=BIGINT}, 
+      #{ip,jdbcType=VARCHAR}, #{x,jdbcType=INTEGER}, #{y,jdbcType=INTEGER}, #{department,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.github.tanhao1410.thesis.management.domain.DeviceDO">
+    insert into device
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="groupId != null">
+        group_id,
+      </if>
+      <if test="ip != null">
+        ip,
+      </if>
+      <if test="x != null">
+        x,
+      </if>
+      <if test="y != null">
+        y,
+      </if>
+      <if test="department != null">
+        department,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="groupId != null">
+        #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="ip != null">
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="x != null">
+        #{x,jdbcType=INTEGER},
+      </if>
+      <if test="y != null">
+        #{y,jdbcType=INTEGER},
+      </if>
+      <if test="department != null">
+        #{department,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.github.tanhao1410.thesis.management.domain.DeviceDO">
+    update device
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="groupId != null">
+        group_id = #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="ip != null">
+        ip = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="x != null">
+        x = #{x,jdbcType=INTEGER},
+      </if>
+      <if test="y != null">
+        y = #{y,jdbcType=INTEGER},
+      </if>
+      <if test="department != null">
+        department = #{department,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.github.tanhao1410.thesis.management.domain.DeviceDO">
+    update device
+    set name = #{name,jdbcType=VARCHAR},
+      group_id = #{groupId,jdbcType=BIGINT},
+      ip = #{ip,jdbcType=VARCHAR},
+      x = #{x,jdbcType=INTEGER},
+      y = #{y,jdbcType=INTEGER},
+      department = #{department,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectCountSelective" resultType="java.lang.Long">
+    select count(1) from device
+    <where>
+      <if test="record.name != null">
+         and name = #{record.name,jdbcType=VARCHAR}
+      </if>
+      <if test="record.groupId != null">
+         and group_id = #{record.groupId,jdbcType=BIGINT}
+      </if>
+      <if test="record.ip != null">
+         and ip = #{record.ip,jdbcType=VARCHAR}
+      </if>
+      <if test="record.x != null">
+         and x = #{record.x,jdbcType=INTEGER}
+      </if>
+      <if test="record.y != null">
+         and y = #{record.y,jdbcType=INTEGER}
+      </if>
+      <if test="record.department != null">
+         and department = #{record.department,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </select>
+  <select id="selectPageSelective" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+     from device
+    <where>
+      <if test="record.name != null">
+         and name = #{record.name,jdbcType=VARCHAR}
+      </if>
+      <if test="record.groupId != null">
+         and group_id = #{record.groupId,jdbcType=BIGINT}
+      </if>
+      <if test="record.ip != null">
+         and ip = #{record.ip,jdbcType=VARCHAR}
+      </if>
+      <if test="record.x != null">
+         and x = #{record.x,jdbcType=INTEGER}
+      </if>
+      <if test="record.y != null">
+         and y = #{record.y,jdbcType=INTEGER}
+      </if>
+      <if test="record.department != null">
+         and department = #{record.department,jdbcType=VARCHAR}
+      </if>
+      <if test="pageable.sort != null">
+         order by 
+        <foreach collection="pageable.sort" item="order" separator=",">
+          <if test="order.property == 'id' || order.property == 'name'  || order.property == 'group_id'  || order.property == 'ip'  || order.property == 'x'  || order.property == 'y'  || order.property == 'department' ">
+             ${order.property} ${order.direction} 
+          </if>
+        </foreach>
+      </if>
+      <if test="pageable.offset >= 0 and pageable.pageSize > 0">
+        limit ${pageable.offset}, ${pageable.pageSize}
+      </if>
+    </where>
+  </select>
+  <update id="batchDeleteByPrimaryKey" parameterType="java.util.List">
+    update device set isactive = 0 where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+       ${item} 
+    </foreach>
+    and isactive = 1
+  </update>
+  <insert id="insertSelectiveReturnPrimaryKey" parameterType="com.github.tanhao1410.thesis.management.domain.DeviceDO">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      select LAST_INSERT_ID() as id
+    </selectKey>
+    insert into device
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        name,
+      </if>
+      <if test="groupId != null">
+        group_id,
+      </if>
+      <if test="ip != null">
+        ip,
+      </if>
+      <if test="x != null">
+        x,
+      </if>
+      <if test="y != null">
+        y,
+      </if>
+      <if test="department != null">
+        department,
+      </if>
+    </trim>
+    <trim prefix=" values (" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="groupId != null">
+        #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="ip != null">
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="x != null">
+        #{x,jdbcType=INTEGER},
+      </if>
+      <if test="y != null">
+        #{y,jdbcType=INTEGER},
+      </if>
+      <if test="department != null">
+        #{department,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <insert id="batchInsert" parameterType="com.github.tanhao1410.thesis.management.domain.DeviceDO">
+    insert into device (name,group_id,ip,x,y,department ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+       (#{item.name,jdbcType=VARCHAR},#{item.groupId,jdbcType=BIGINT},#{item.ip,jdbcType=VARCHAR},#{item.x,jdbcType=INTEGER},#{item.y,jdbcType=INTEGER},#{item.department,jdbcType=VARCHAR} ) 
+    </foreach>
+  </insert>
+  <select id="batchSelectByPrimaryKey" parameterType="java.util.List" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+     from device where id in
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+       ${item} 
+    </foreach>
+  </select>
+  <insert id="insertIgnoreSelective" parameterType="com.github.tanhao1410.thesis.management.domain.DeviceDO">
+    insert ignore into device
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        name,
+      </if>
+      <if test="groupId != null">
+        group_id,
+      </if>
+      <if test="ip != null">
+        ip,
+      </if>
+      <if test="x != null">
+        x,
+      </if>
+      <if test="y != null">
+        y,
+      </if>
+      <if test="department != null">
+        department,
+      </if>
+    </trim>
+    <trim prefix=" values (" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="groupId != null">
+        #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="ip != null">
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="x != null">
+        #{x,jdbcType=INTEGER},
+      </if>
+      <if test="y != null">
+        #{y,jdbcType=INTEGER},
+      </if>
+      <if test="department != null">
+        #{department,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

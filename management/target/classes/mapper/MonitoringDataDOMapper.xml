@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.tanhao1410.thesis.management.mapper.MonitoringDataDOMapper">
+  <resultMap id="BaseResultMap" type="com.github.tanhao1410.thesis.management.domain.MonitoringDataDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="device_id" jdbcType="BIGINT" property="deviceId" />
+    <result column="rule_id" jdbcType="BIGINT" property="ruleId" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, device_id, rule_id, value, start_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from monitoring_data
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from monitoring_data
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.github.tanhao1410.thesis.management.domain.MonitoringDataDO">
+    insert into monitoring_data (id, name, device_id, 
+      rule_id, value, start_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{deviceId,jdbcType=BIGINT}, 
+      #{ruleId,jdbcType=BIGINT}, #{value,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.github.tanhao1410.thesis.management.domain.MonitoringDataDO">
+    insert into monitoring_data
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="deviceId != null">
+        device_id,
+      </if>
+      <if test="ruleId != null">
+        rule_id,
+      </if>
+      <if test="value != null">
+        value,
+      </if>
+      <if test="startTime != null">
+        start_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceId != null">
+        #{deviceId,jdbcType=BIGINT},
+      </if>
+      <if test="ruleId != null">
+        #{ruleId,jdbcType=BIGINT},
+      </if>
+      <if test="value != null">
+        #{value,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null">
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.github.tanhao1410.thesis.management.domain.MonitoringDataDO">
+    update monitoring_data
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceId != null">
+        device_id = #{deviceId,jdbcType=BIGINT},
+      </if>
+      <if test="ruleId != null">
+        rule_id = #{ruleId,jdbcType=BIGINT},
+      </if>
+      <if test="value != null">
+        value = #{value,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null">
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.github.tanhao1410.thesis.management.domain.MonitoringDataDO">
+    update monitoring_data
+    set name = #{name,jdbcType=VARCHAR},
+      device_id = #{deviceId,jdbcType=BIGINT},
+      rule_id = #{ruleId,jdbcType=BIGINT},
+      value = #{value,jdbcType=VARCHAR},
+      start_time = #{startTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectCountSelective" resultType="java.lang.Long">
+    select count(1) from monitoring_data
+    <where>
+      <if test="record.name != null">
+         and name = #{record.name,jdbcType=VARCHAR}
+      </if>
+      <if test="record.deviceId != null">
+         and device_id = #{record.deviceId,jdbcType=BIGINT}
+      </if>
+      <if test="record.ruleId != null">
+         and rule_id = #{record.ruleId,jdbcType=BIGINT}
+      </if>
+      <if test="record.value != null">
+         and value = #{record.value,jdbcType=VARCHAR}
+      </if>
+      <if test="record.startTime != null">
+         and start_time = #{record.startTime,jdbcType=TIMESTAMP}
+      </if>
+    </where>
+  </select>
+  <select id="selectPageSelective" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+     from monitoring_data
+    <where>
+      <if test="record.name != null">
+         and name = #{record.name,jdbcType=VARCHAR}
+      </if>
+      <if test="record.deviceId != null">
+         and device_id = #{record.deviceId,jdbcType=BIGINT}
+      </if>
+      <if test="record.ruleId != null">
+         and rule_id = #{record.ruleId,jdbcType=BIGINT}
+      </if>
+      <if test="record.value != null">
+         and value = #{record.value,jdbcType=VARCHAR}
+      </if>
+      <if test="record.startTime != null">
+         and start_time = #{record.startTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="pageable.sort != null">
+         order by 
+        <foreach collection="pageable.sort" item="order" separator=",">
+          <if test="order.property == 'id' || order.property == 'name'  || order.property == 'device_id'  || order.property == 'rule_id'  || order.property == 'value'  || order.property == 'start_time' ">
+             ${order.property} ${order.direction} 
+          </if>
+        </foreach>
+      </if>
+      <if test="pageable.offset >= 0 and pageable.pageSize > 0">
+        limit ${pageable.offset}, ${pageable.pageSize}
+      </if>
+    </where>
+  </select>
+  <update id="batchDeleteByPrimaryKey" parameterType="java.util.List">
+    update monitoring_data set isactive = 0 where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+       ${item} 
+    </foreach>
+    and isactive = 1
+  </update>
+  <insert id="insertSelectiveReturnPrimaryKey" parameterType="com.github.tanhao1410.thesis.management.domain.MonitoringDataDO">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      select LAST_INSERT_ID() as id
+    </selectKey>
+    insert into monitoring_data
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        name,
+      </if>
+      <if test="deviceId != null">
+        device_id,
+      </if>
+      <if test="ruleId != null">
+        rule_id,
+      </if>
+      <if test="value != null">
+        value,
+      </if>
+      <if test="startTime != null">
+        start_time,
+      </if>
+    </trim>
+    <trim prefix=" values (" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceId != null">
+        #{deviceId,jdbcType=BIGINT},
+      </if>
+      <if test="ruleId != null">
+        #{ruleId,jdbcType=BIGINT},
+      </if>
+      <if test="value != null">
+        #{value,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null">
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <insert id="batchInsert" parameterType="com.github.tanhao1410.thesis.management.domain.MonitoringDataDO">
+    insert into monitoring_data (name,device_id,rule_id,value,start_time ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+       (#{item.name,jdbcType=VARCHAR},#{item.deviceId,jdbcType=BIGINT},#{item.ruleId,jdbcType=BIGINT},#{item.value,jdbcType=VARCHAR},#{item.startTime,jdbcType=TIMESTAMP} ) 
+    </foreach>
+  </insert>
+  <select id="batchSelectByPrimaryKey" parameterType="java.util.List" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+     from monitoring_data where id in
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+       ${item} 
+    </foreach>
+  </select>
+  <insert id="insertIgnoreSelective" parameterType="com.github.tanhao1410.thesis.management.domain.MonitoringDataDO">
+    insert ignore into monitoring_data
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        name,
+      </if>
+      <if test="deviceId != null">
+        device_id,
+      </if>
+      <if test="ruleId != null">
+        rule_id,
+      </if>
+      <if test="value != null">
+        value,
+      </if>
+      <if test="startTime != null">
+        start_time,
+      </if>
+    </trim>
+    <trim prefix=" values (" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceId != null">
+        #{deviceId,jdbcType=BIGINT},
+      </if>
+      <if test="ruleId != null">
+        #{ruleId,jdbcType=BIGINT},
+      </if>
+      <if test="value != null">
+        #{value,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null">
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+</mapper>
