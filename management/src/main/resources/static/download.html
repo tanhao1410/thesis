@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人力成本核算系统</title>
+    <link rel="stylesheet" href="./plugins/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="./css/header.css">
+    <link rel="stylesheet" href="./plugins/font-awesome/css/all.css">
+    <link rel="stylesheet" href="./css/base.css">
+    <link rel="stylesheet" href="./css/public.css">
+    <script src="./plugins/vue.js"></script>
+    <script src="./plugins/element-ui/lib/index.js"></script>
+    <script src="./plugins/axios.js"></script>
+    <script src="./plugins/http.js"></script>
+    <script src="./plugins/component/header.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <main-header >
+        </main-header>
+        <div class="financial-tool-download">
+            <div class="title-word">
+                下载列表
+            </div>
+            <div class="button-wrapper">
+                <div>
+                    <span class="btn-label">
+                        月份：
+                    </span>
+                    <el-date-picker
+                        v-model="month"
+                        type="month"
+                        placeholder="选择月"
+                        @change="selectMonth"
+                        value-format="yyyy-MM"
+                        popper-class="financial-date-picker"
+                    >
+                    </el-date-picker>
+                    <span  class="btn-label" style="margin-left: 10px;">
+                        类型：
+                    </span>
+                    <el-select
+                        clearable
+                        v-model="fildType"
+                        placeholder="请选择"
+                        @change="fildTypeChange"
+                    >
+                        <el-option
+                            v-for="item in fildTypeList"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id"
+                        ></el-option>
+                    </el-select>
+                </div>
+                <div class="button-wrapper-right">
+                    <div class="download-wrapper">
+                        <el-button 
+                        plain 
+                        @click="bulkDownload()"
+                        :disabled = "downDisable"
+                        >
+                            <!-- <font-awesome-icon
+                                :icon="['fas', 'cloud-download-alt']"
+                            ></font-awesome-icon>  -->
+                            <i class="fa fa-cloud-download-alt"></i>
+                            批量下载
+                        </el-button>
+                    </div>
+                    <div  class="summary-wrapper">
+                        <el-button 
+                        type="primary" 
+                        @click="summary()"
+                        >
+                        汇总
+                        </el-button>
+                    </div>
+                </div>
+            </div>
+            <el-table
+                :data="tableData"
+                tooltip-effect="light"
+                border
+                v-loading="loading"
+                @selection-change="selectRow"
+            >
+                <el-table-column
+                    type="selection"
+                    width="60">
+                </el-table-column>
+                <el-table-column
+                    min-width="25%"
+                    label="所属母公司"
+                    show-overflow-tooltip
+                    prop="parentCompany"
+                ></el-table-column>
+                <el-table-column
+                    min-width="25%"
+                    label="分子公司"
+                    show-overflow-tooltip
+                    prop="companyName"
+                ></el-table-column>
+                <el-table-column
+                    min-width="18%"
+                    label="上传时间"
+                    show-overflow-tooltip
+                    prop="uploadTime"
+                ></el-table-column>
+                <el-table-column
+                    min-width="12%"
+                    label="上传人"
+                    show-overflow-tooltip
+                    prop="uploader"
+                ></el-table-column>
+                <el-table-column
+                    min-width="11%"
+                    label="类型"
+                    show-overflow-tooltip
+                    prop="typeName"
+                ></el-table-column>
+                <el-table-column min-width="9%" label="操作">
+                    <template slot-scope="scope">
+                        <el-tooltip content="下载" placement="top" effect="light">
+                            <i @click="download(scope.row)" class="fa fa-download" style="color:#3A8DE3"></i>
+                        </el-tooltip>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </div>
+    </div>
+</body>
+<script>
+    var _this = this;
+    var app = new Vue({
+        el:"#app",
+        data: {
+            month: "",
+            downDisable: true,
+            tableData: [
+                // {
+                //     parentCompany: "母公司名称",
+                //     companyName: "子公司名称",
+                //     uploadTime: "上传时间",
+                //     uploader:'王',
+                //     typeName:'工资表',
+                //     fileId: "daaf-asdasfasfd-afafasf"
+                // },
+            ],
+            loading: false,
+            multipleSelection:[],
+            // 类型筛选
+            fildType:'',
+            fildTypeList:[
+                // {
+                //     id:1,
+                //     name:'工资表'
+                // },
+            ]
+        }, 
+        mounted() {
+            this.getFildType()
+        },
+        methods: {
+            selectMonth(currentDate) {
+                if(currentDate){
+                    this.getTableData()
+                }
+                
+            },
+            getTableData(){
+                this.loading = true;
+                let params = {
+                    month: this.month,
+                    type: this.fildType
+                };
+                httpGet("/finaTool/uploadServer/downloadFileList", params, this, (err, res) => {
+                    this.loading = false;
+                    if (!err) {
+                        if (0 === res.code) {
+                            this.tableData = res.result.list;
+                            if(res.result.month){
+                                this.month = res.result.month
+                            }
+                            
+                        } else {
+                            this.$message.error(res.resultMessage);
+                        }
+                    } else {
+                        this.$message.error("获取下载列表数据失败");
+                    }
+                });
+            },
+            // 获取类型字典表数据
+            getFildType() {
+                httpGet(
+                    "/financial/dict/fileType",
+                    {},
+                    this,
+                    (err, res) => {
+                        if (!err) {
+                            if (0 === res.code) {
+                                this.fildTypeList = res.result.list;
+                                res.result.list.forEach(item => {
+                                    if (-1 < item.name.indexOf('全部')) {
+                                        this.fildType = item.id
+                                    }
+                                })
+                                this.getTableData()
+                            } else {
+                                this.$message.error(res.resultMessage);
+                            }
+                        } else {
+                            this.$message.error("获取类型字典数据失败");
+                        }
+                    }
+                );
+            },
+            // 批量下载
+            bulkDownload(){
+                var fileId = '';
+                if(0<this.multipleSelection.length){
+                    this.multipleSelection.forEach((item,index)=>{
+                        if(this.multipleSelection.length-1 !== index){
+                            fileId += item.fileId+','
+                        }else{
+                            fileId += item.fileId;
+                        }
+                    })
+                    window.open(`/finaTool/uploadServer/downloads?fileIds=${fileId}`, "_blank");
+                }  
+
+            },
+            // 列表中的下载
+            download(row){
+                window.open(`/finaTool/uploadServer/downloads?fileIds=${row.fileId}`, "_blank");
+            },
+            // table中的checkbox框
+            selectRow(selection){
+                this.multipleSelection = selection;
+                if(this.multipleSelection.length>0){
+                    this.downDisable = false;
+                }else{
+                    this.downDisable = true;
+                }
+            },
+            // 汇总
+            summary(){
+                window.location.href = `/summary.html?month=${this.month}`
+            },
+            fildTypeChange(val){
+                this.fildType = val;
+                console.log('val',val)
+                this.getTableData()
+            }
+        }
+    })
+
+</script>
+<style>
+    .financial-tool-download {
+        padding: 0 32px 20px 40px;
+    }
+    .financial-tool-download .title-word{
+        font-size: 18px;
+        font-family: Source Han Sans CN;
+        font-weight: 400;
+        color: #384253;
+        line-height: 18px;
+        padding: 14px 0 11px;
+    }
+    .financial-tool-download .button-wrapper {
+        display: flex;
+        justify-content: space-between;
+    }
+    .financial-tool-download .button-wrapper .btn-label{
+        color: #8C98AD;
+        font-size: 14px;
+    }
+    .financial-tool-download .button-wrapper-right{
+        display: flex;
+    }
+    .download-wrapper button.el-button{
+        color:#3A8DE3;
+        border: 1px solid #3A8DE3;
+    }
+    .download-wrapper .el-button:hover{
+        background: #3A8DE3;
+        color: #fff;
+    }
+    .summary-wrapper{
+        margin-left: 9px;
+    }
+   
+</style>
+
+</html>

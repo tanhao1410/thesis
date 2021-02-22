@@ -92,7 +92,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 
             if (obj != null) {
                 request.setAttribute(LOGIN_ATTRIBUTE_NAME, obj);
-                ExpireMap.expireKey(RedisConfConstant.USER_LOGIN_TOKEN_PRE + token, RedisConfConstant.EXPIRED_TIME_HOUR_1, TimeUnit.SECONDS);
+                ExpireMap.expireKey(RedisConfConstant.USER_LOGIN_TOKEN_PRE + token, 3600, TimeUnit.SECONDS);
             } else {
                 return handleNotLogin(request, response, loginContext);
             }

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:cache="http://www.springframework.org/schema/cache"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context.xsd
+                        http://www.springframework.org/schema/aop
+                        http://www.springframework.org/schema/aop/spring-aop.xsd
+                        http://www.springframework.org/schema/tx
+                        http://www.springframework.org/schema/tx/spring-tx.xsd
+                        http://www.springframework.org/schema/mvc
+                        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+                        http://www.springframework.org/schema/cache
+                        http://www.springframework.org/schema/cache/spring-cache.xsd"
+       default-autowire="byName">
+
+    <description>redis 相关类 Spring 托管</description>
+
+    <!-- 开启缓存 -->
+    <cache:annotation-driven />
+    <bean name="springCacheAnnotationParser" class="org.springframework.cache.annotation.SpringCacheAnnotationParser"></bean>
+    <bean name="annotationCacheOperationSource" class="org.springframework.cache.annotation.AnnotationCacheOperationSource">
+        <constructor-arg>
+            <array>
+                <ref bean="springCacheAnnotationParser"/>
+            </array>
+        </constructor-arg>
+    </bean>
+    <bean name="cacheInterceptor" class="org.springframework.cache.interceptor.CacheInterceptor">
+        <property name="cacheOperationSources" ref="annotationCacheOperationSource" />
+    </bean>
+    <bean class="org.springframework.cache.interceptor.BeanFactoryCacheOperationSourceAdvisor">
+        <property name="cacheOperationSource" ref="annotationCacheOperationSource" />
+        <property name="advice" ref="cacheInterceptor" />
+        <property name="order" value="2147483647" />
+    </bean>
+
+    <!--载入 redis 配置文件-->
+<!--    <context:property-placeholder location="classpath:redis.properties" ignore-unresolvable="true"/>-->
+
+
+    <!-- 配置JedisConnectionFactory -->
+    <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+        <property name="hostName" value="${spring.redis.host}"/>
+        <property name="port" value="${spring.redis.port}"/>
+<!--        <property name="password" value="${redis.pass}"/>-->
+<!--        <property name="database" value="${redis.dbIndex}"/>-->
+        <property name="poolConfig" ref="jedisPoolConfig"/>
+        <!-- <constructor-arg name="sentinelConfig" ref="redisSentinelConfiguration" /> -->
+        <constructor-arg name="poolConfig" ref="jedisPoolConfig" />
+    </bean>
+    <!-- 配置 JedisPoolConfig 实例 -->
+    <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <!-- 最大空闲时间 -->
+        <property name="maxIdle" value="${redis.pool.maxIdle}"/>
+        <!-- 最小空闲时间 -->
+        <property name="minIdle" value="${redis.pool.minIdle}"/>
+    </bean>
+
+    <!-- SDR默认采用的序列化策略有两种，一种是String的序列化策略，一种是JDK的序列化策略。
+        StringRedisTemplate默认采用的是String的序列化策略，保存的key和value都是采用此策略序列化保存的。
+        RedisTemplate默认采用的是JDK的序列化策略，保存的key和value都是采用此策略序列化保存的。
+        就是因为序列化策略的不同，即使是同一个key用不同的Template去序列化，结果是不同的。所以根据key去删除数据的时候就出现了删除失败的问题。
+    -->
+    <!-- redis 序列化策略 ，通常情况下key值采用String序列化策略， -->
+    <!-- 如果不指定序列化策略，StringRedisTemplate的key和value都将采用String序列化策略； -->
+    <!-- 但是RedisTemplate的key和value都将采用JDK序列化 这样就会出现采用不同template保存的数据不能用同一个template删除的问题 -->
+    <!-- 配置RedisTemplate -->
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+        <property name="connectionFactory" ref="jedisConnectionFactory" />
+        <property name="keySerializer">
+            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+        </property>
+        <!-- <property name="valueSerializer" ref="stringRedisSerializer" /> value值如果是对象，这不能用stringRedisSerializer，报类型转换错误-->
+        <!-- <property name="valueSerializer">
+            hex（十六进制）的格式
+            <bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer" />
+        </property> -->
+        <property name="valueSerializer" >
+            <!-- json的格式，要注意实体属性名有没有‘_’,如user_name,有的话要加注解 ，@JsonNaming会将userName处理为user_name
+                   @JsonSerialize
+                @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
+               -->
+            <bean class="org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer" />
+        </property>
+    </bean>
+
+    <!-- spring自己的缓存管理器，这里定义了缓存位置名称 ，即注解中的value -->
+    <bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
+        <property name="caches">
+            <set>
+                <!-- 这里可以配置多个redis -->
+                <bean
+                        class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
+                    <property name="name" value="localDefault" /><!-- 缺省本地缓存 -->
+                </bean>
+                <bean
+                        class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
+                    <property name="name" value="WSLocalTableCache" /><!-- 单表配置 -->
+                </bean>
+            </set>
+        </property>
+    </bean>
+
+    <!-- 配置redis发布订阅模式 -->
+    <bean id="redisMessageListenerContainer" class="org.springframework.data.redis.listener.RedisMessageListenerContainer">
+        <property name="connectionFactory" ref="jedisConnectionFactory" />
+<!--        <property name="messageListeners">-->
+<!--            <map>-->
+<!--                <entry key-ref="messageListenerAdapter">-->
+<!--                    <bean class="org.springframework.data.redis.listener.ChannelTopic">-->
+<!--                        <constructor-arg value="WEB_SOCKET:LOTTERY"></constructor-arg>-->
+<!--                    </bean>-->
+<!--                </entry>-->
+<!--            </map>-->
+<!--        </property>-->
+    </bean>
+
+</beans>

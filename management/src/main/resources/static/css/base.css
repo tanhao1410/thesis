@@ -1,0 +1,47 @@
+html,
+body {
+    height: 100%;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+    background-color: #fff;
+}
+
+* {
+    font-family: Arial, 'Times New Roman', 'Microsoft YaHei', "微软雅黑", sans-serif;
+}
+
+a {
+    text-decoration: none;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+.bd-tc {
+    text-align: center;
+}
+
+.bd-tr {
+    text-align: right;
+}
+
+.bd-tl {
+    text-align: left;
+}
+
+.bd-cursor-pointer {
+    cursor: pointer;
+}
+
+.bd-display-none {
+    display: none;
+}
+
+.bd-text-break {
+    word-break: break-all;
+}

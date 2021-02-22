@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>服务器监控管理系统</title>
+    <link rel="stylesheet" href="./plugins/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="./plugins/font-awesome/css/all.css">
+    <link rel="stylesheet" href="./css/base.css">
+    <script src="./plugins/vue.js"></script>
+    <script src="./plugins/element-ui/lib/index.js"></script>
+    <script src="./plugins/axios.js"></script>
+    <script src="./plugins/http.js"></script>
+    <script src="./plugins/JSEncrypt.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div class="pg-login">
+            <div class="login-container">
+                <div class="login-wrapper">
+                    <div class="login-form">
+                        <div class="login-title">
+                            <img
+                                src="./images/login/logo.png"
+                                style="vertical-align:middle;margin-right:22px;"
+                            />
+                            服务器监控管理系统
+                        </div>
+                        <p v-if="errorTip.hide" class="bd-invisible">
+                            <i class="el-icon-error" style="font-size: 14px;cursor:pointer;color:red"></i>
+                            {{errorTip.msg}}
+                        </p>
+                        <div>
+                            <el-form
+                                label-position="top"
+                                :hide-required-asterisk="hideRequiredAsterisk"
+                                :model="loginForm"
+                                :rules="loginRules"
+                                ref="loginForm"
+                            >
+                                <el-form-item prop="loginUserName" label="登录名">
+                                    <el-input
+                                        v-model.trim="loginForm.loginUserName"
+                                        type="text"
+                                        maxlength="100"
+                                        autocomplete="off"
+                                        :readOnly="readOnlyFlag"
+                                        @blur="readOnlyFlag=true"
+                                        @focus="readOnlyFlag=false"
+                                        clearable
+                                        placeholder="请输入您的账号"
+                                    ></el-input>
+                                </el-form-item>
+                                <el-form-item prop="password" label="密码">
+                                    <el-input
+                                        v-model="loginForm.password"
+                                        type="password"
+                                        maxlength="100"
+                                        autocomplete="off"
+                                        :readOnly="passReadOnlyFlag"
+                                        @blur="passReadOnlyFlag=true;"
+                                        @focus="passReadOnlyFlag=false;"
+                                        clearable
+                                        @keydown.enter.native="submitForm('loginForm')"
+                                        placeholder="请输入密码"
+                                    ></el-input>
+                                </el-form-item>
+    
+                                <el-form-item>
+                                    <el-button
+                                        type="primary"
+                                        class="submit-button"
+                                        :loading="loading"
+                                        @click="submitForm('loginForm')"
+                                    >登录</el-button>
+                                </el-form-item>
+                            </el-form>
+                        </div>
+                    </div>
+                    <div class="login-picture">
+                        <img src="./images/login/右侧图片.png" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script>
+    var _this = this;
+    var app = new Vue({
+        el:"#app",
+        data: {
+            //登录按钮loading
+           loading: false,
+            //登录表单数据
+            loginForm: {
+                loginUserName: "",
+                password: "",
+            },
+            passReadOnlyFlag: true,
+            readOnlyFlag: true,
+            //隐藏必填项前的*
+            hideRequiredAsterisk: true,
+            //错误提示
+            errorTip: {
+                hide: false,
+                msg: "",
+            },
+            //登录表单验证规则
+            loginRules: {
+                loginUserName: [
+                    {
+                        required: true,
+                        message: "请输入用户名",
+                        trigger: "blur",
+                    },
+                    {
+                        min: 1,
+                        max: 25,
+                        message: "长度在1到25位之间",
+                        trigger: "blur",
+                    },
+                ],
+                password: [
+                    { required: true, message: "请输入密码", trigger: "blur" },
+                    {
+                        pattern: /^[\x21-\x7E]{6,25}$/,
+                        message:
+                            "支持英文、数字与常用符号，密码长度在6到25位之间",
+                        trigger: "blur",
+                    },
+                ],
+            }, 
+            
+        }, 
+        mounted() {
+            this.getUserInfo();
+        },
+        methods: {
+            //登录按钮
+            submitForm(formname) {
+                this.$refs[formname].validate((valid) => {
+                    if (valid) {
+                        this.getPublicKey();
+                    } else {
+                        return false;
+                    }
+                });
+            },
+            //登录接口
+            login(publicKey) {
+                let encryptor = new JSEncrypt();
+                // 获取公钥，设置公钥
+                encryptor.setPublicKey(publicKey);
+                // 加密数据
+                let params = {
+                    userName: encryptor.encrypt(this.loginForm.loginUserName),
+                    password: encryptor.encrypt(this.loginForm.password),
+                };
+                this.loading = true;
+                httpPost(
+                    "/financial/userService/login",
+                    params,
+                    this,
+                    (err, res) => {
+                        this.loading = false;
+                        if (!err) {
+                            if (0 === res.code) {
+                                //正常登录
+                                window.location.href = res.result.redirtUrl;
+                            } else if (-1 === res.code) {
+                                this.$set(this.errorTip, "hide", true);
+                                this.$set(this.errorTip, "msg", res.resultMessage);
+                            } else {
+                                this.$set(this.errorTip, "hide", true);
+                                this.$set(this.errorTip, "msg", res.resultMessage);
+                                return null;
+                            }
+                        } else {
+                            this.$set(this.errorTip, "hide", true);
+                            this.$set(this.errorTip, "msg", "登录失败");
+                            return null;
+                        }
+                    }
+                );
+            },
+            //获取密钥
+            getPublicKey() {
+                let publicKey = null;
+                let params = {};
+                httpGet(
+                    "/financial/userService/rsaPublicKey",
+                    params,
+                    this,
+                    (err, res) => {
+                        if (!err) {
+                            if (0 === res.code) {
+                                publicKey = res.result.publicKey;
+                                this.publicKey = res.result.publicKey;
+                                this.login(publicKey);
+                            } else {
+                                this.$set(this.errorTip, "hide", true);
+                                this.$set(this.errorTip, "msg", res.resultMessage);
+                            }
+                        } else {
+                            this.$set(this.errorTip, "hide", true);
+                            this.$set(this.errorTip, "msg", "登录失败");
+                        }
+                    }
+                );
+            },
+            //如果用户已经登录过了，直接进对应的页面
+            getUserInfo() {
+                let params = {};
+                httpGet(
+                    "/financial/userService/userInfo",
+                    params,
+                    this,
+                    (err, res) => {
+                        if (!err) {
+                            if (0 === res.code) {
+                                window.location.href = res.result.redirtUrl;
+                            } else if (-88 !== res.code) {
+                                this.$message.error(res.resultMessage);
+                            }
+                        } else {
+                            this.$message.error("获取用户信息失败");
+                        }
+                    }
+                );
+            },
+           
+        }
+    })
+
+</script>
+<style>
+    .pg-login {
+        min-height: calc(100vh);
+        background: url("./images/login/背景左上.png") left top no-repeat,
+            url("./images/login/背景右下.png") right bottom no-repeat
+                rgba(241, 244, 254, 1);
+    }
+    .login-container {
+        width: 100%;
+        min-height: calc(100vh);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .pg-login .login-wrapper {
+        width: 972px;
+        min-height: 520px;
+        background: #fff;
+        position: relative;
+        box-shadow: 0px 24px 27px 0px rgba(0, 21, 107, 0.18);
+    }
+    .pg-login .login-wrapper .login-form {
+        box-sizing: border-box;
+        width: 511px;
+        padding: 80px 83px 0 68px;
+    }
+    .pg-login .login-wrapper .login-form .login-title {
+        /* text-align: center; */
+        color: #333;
+        font-size: 24px;
+        padding-bottom: 30px;
+        margin-left: 40px;
+    }
+    /* 登录右侧图片 */
+    .pg-login .login-wrapper .login-picture {
+        width: 467px;
+        height: 566px;
+        background: url("./images/login/右侧圆角矩形.png") no-repeat;
+        position: absolute;
+        right: 0;
+        top: -23px;
+    }
+    .pg-login .login-wrapper .login-picture img {
+        /* width:110%; */
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-45%, -50%);
+        /* -webkit-transform: translate(-30%, -50%); */
+    }
+</style>
+<style>
+    .pg-login .el-input__inner {
+        background: #fff;
+        color: #606266;
+        border: 1px solid rgba(218, 223, 233, 1);
+    }
+    .pg-login input.el-input__inner:hover {
+        border: 1px solid rgba(218, 223, 233, 1);
+    }
+    .pg-login .login-form button.el-button.submit-button {
+        width: 100%;
+        background: #2b73e8;
+        border-radius: 4px;
+        border-color: unset;
+        margin-bottom: 20px;
+        margin-top: 20px;
+    }
+    .pg-login .login-form .el-form-item__label {
+        padding: 0;
+        color: #546072;
+        line-height: 30px;
+    }
+    .pg-login .el-form-item {
+        margin-bottom: 20px;
+    }
+</style>
+
+</html>

@@ -75,7 +75,7 @@ public class UserBusinessServiceImpl implements IUserBusinessService {
             userBean.setToken(token);
 
             //存入redis中
-            ExpireMap.set(RedisConfConstant.USER_LOGIN_TOKEN_PRE + token, JSON.toJSONString(userBean), RedisConfConstant.EXPIRED_TIME_HOUR_1);
+            ExpireMap.set(RedisConfConstant.USER_LOGIN_TOKEN_PRE + token, JSON.toJSONString(userBean), 3600);
 
 
             response.setToken(token);
