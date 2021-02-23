@@ -1,0 +1,4 @@
+logging:
+  file: logs/client.log
+  level:
+    root: info
