@@ -1,6 +1,7 @@
 package com.github.tanhao1410.thesis.management.service;
 
-import com.github.tanhao1410.thesis.management.domain.DeviceDO;
+
+import com.github.tanhao1410.thesis.common.domain.DeviceDO;
 
 import java.util.List;
 import java.util.Set;

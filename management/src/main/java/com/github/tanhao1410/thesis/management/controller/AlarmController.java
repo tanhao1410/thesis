@@ -2,7 +2,7 @@ package com.github.tanhao1410.thesis.management.controller;
 
 
 import com.github.tanhao1410.thesis.management.bean.ActionResult;
-import com.github.tanhao1410.thesis.management.domain.AlarmDO;
+import com.github.tanhao1410.thesis.common.domain.AlarmDO;
 import com.github.tanhao1410.thesis.management.service.AlarmService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

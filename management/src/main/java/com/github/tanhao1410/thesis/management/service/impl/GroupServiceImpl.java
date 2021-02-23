@@ -2,17 +2,23 @@ package com.github.tanhao1410.thesis.management.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.github.tanhao1410.thesis.management.domain.DeviceDO;
-import com.github.tanhao1410.thesis.management.domain.GroupDO;
-import com.github.tanhao1410.thesis.management.service.NetworkService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.github.tanhao1410.thesis.common.domain.GroupDO;
+import com.github.tanhao1410.thesis.common.mapper.GroupDOMapper;
+import com.github.tanhao1410.thesis.management.service.GroupService;
+import org.apache.ibatis.annotations.ResultMap;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Service
-public class NetworkServiceImpl implements NetworkService {
+public class GroupServiceImpl implements GroupService {
+
+    @Resource
+    private GroupDOMapper groupDOMapper;
 
     @Override
     public GroupDO getNetworkById(String networkId) throws Exception {
@@ -34,7 +40,12 @@ public class NetworkServiceImpl implements NetworkService {
 
     @Override
     public List<GroupDO> getAllNetwork() throws Exception {
-        return null;
+        GroupDO queryDo = new GroupDO();
+        //queryDo.setId(1L);
+        queryDo.setX(30);
+        ArrayList<GroupDO> res = new ArrayList();
+        res.add(groupDOMapper.selectByPrimaryKey(1L));
+        return res;
     }
 
     @Override

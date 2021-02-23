@@ -2,7 +2,7 @@ package com.github.tanhao1410.thesis.management.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.github.tanhao1410.thesis.management.bean.ActionResult;
-import com.github.tanhao1410.thesis.management.domain.DeviceDO;
+import com.github.tanhao1410.thesis.common.domain.DeviceDO;
 import com.github.tanhao1410.thesis.management.service.NodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -1,10 +1,11 @@
 package com.github.tanhao1410.thesis.management.service;
 
-import com.github.tanhao1410.thesis.management.domain.GroupDO;
+
+import com.github.tanhao1410.thesis.common.domain.GroupDO;
 
 import java.util.List;
 
-public interface NetworkService {
+public interface GroupService {
 
     GroupDO getNetworkById(String networkId) throws Exception;
 

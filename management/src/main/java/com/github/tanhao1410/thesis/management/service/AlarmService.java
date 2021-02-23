@@ -1,7 +1,8 @@
 package com.github.tanhao1410.thesis.management.service;
 
 
-import com.github.tanhao1410.thesis.management.domain.AlarmDO;
+
+import com.github.tanhao1410.thesis.common.domain.AlarmDO;
 
 import java.util.List;
 

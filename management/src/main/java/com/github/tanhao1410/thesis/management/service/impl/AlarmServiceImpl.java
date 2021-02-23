@@ -1,7 +1,8 @@
 package com.github.tanhao1410.thesis.management.service.impl;
 
-import com.github.tanhao1410.thesis.management.domain.AlarmDO;
-import com.github.tanhao1410.thesis.management.domain.DeviceDO;
+
+import com.github.tanhao1410.thesis.common.domain.AlarmDO;
+import com.github.tanhao1410.thesis.common.domain.DeviceDO;
 import com.github.tanhao1410.thesis.management.service.AlarmService;
 import com.github.tanhao1410.thesis.management.service.NodeService;
 import org.springframework.beans.factory.annotation.Autowired;

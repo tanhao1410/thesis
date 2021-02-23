@@ -22,18 +22,18 @@
 		 
 		 
 		 <!--生成模型的包名和位置--> 
-		 <javaModelGenerator targetPackage="com.github.tanhao1410.thesis.management.domain"  targetProject="src/main/java">
+		 <javaModelGenerator targetPackage="com.github.tanhao1410.thesis.common.domain"  targetProject="common/src/main/java">
 		 	<property name="enableSubPackages" value="true"/>
 		 	<property name="trimStrings" value="true"/>
 		 </javaModelGenerator>
 		 
         <!--生成映射文件的包名和位置，xml文件-->
-        <sqlMapGenerator targetPackage="genmapper" targetProject="src/main/resources">
+        <sqlMapGenerator targetPackage="mapper" targetProject="common/src/main/resources">
 		 	<property name="enableSubPackages" value="true"/>
 		 </sqlMapGenerator>
 		 
 		<!-- 生成repository的包名和位置, java代码-->  
-		 <javaClientGenerator type="XMLMAPPER" targetPackage="com.github.tanhao1410.thesis.management.mapper" targetProject="src/main/java">
+		 <javaClientGenerator type="XMLMAPPER" targetPackage="com.github.tanhao1410.thesis.common.mapper" targetProject="common/src/main/java">
             <property name="enableSubPackages" value="true"/>  
         </javaClientGenerator>
 
@@ -41,15 +41,11 @@
 			   enableCountByExample="false" enableSelectByExample="false"
 			   enableDeleteByExample="false" enableUpdateByExample="false" selectByExampleQueryId="false"/>
 
-		<!--<table tableName="alarm" domainObjectName="AlarmDO"
+		<table tableName="alarm" domainObjectName="AlarmDO"
 			   enableCountByExample="false" enableSelectByExample="false"
 			   enableDeleteByExample="false" enableUpdateByExample="false" selectByExampleQueryId="false"/>
 
 		<table tableName="device" domainObjectName="DeviceDO"
-			   enableCountByExample="false" enableSelectByExample="false"
-			   enableDeleteByExample="false" enableUpdateByExample="false" selectByExampleQueryId="false"/>
-
-		<table tableName="group" domainObjectName="GroupDO"
 			   enableCountByExample="false" enableSelectByExample="false"
 			   enableDeleteByExample="false" enableUpdateByExample="false" selectByExampleQueryId="false"/>
 
@@ -75,7 +71,7 @@
 
 		<table tableName="user_group" domainObjectName="UserGroupDO"
 			   enableCountByExample="false" enableSelectByExample="false"
-			   enableDeleteByExample="false" enableUpdateByExample="false" selectByExampleQueryId="false"/>-->
+			   enableDeleteByExample="false" enableUpdateByExample="false" selectByExampleQueryId="false"/>
 
 
 	</context> 
