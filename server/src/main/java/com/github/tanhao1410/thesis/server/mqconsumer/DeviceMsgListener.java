@@ -1,7 +1,6 @@
-package com.github.tanhao1410.thesis.management.redisQueue;
+package com.github.tanhao1410.thesis.server.mqconsumer;
 
-import com.alibaba.fastjson.JSONObject;
-import com.github.tanhao1410.thesis.management.constant.RedisConfConstant;
+import com.github.tanhao1410.thesis.mq.MQConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.Message;
@@ -11,24 +10,18 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 /**
- * @author hushawen
+ * @author tanhao
  * @date 2021/2/19 14:34
  */
 @Component
 @Slf4j
 @Async
-public class RedisCommonMsgListener extends MessageListenerAdapter {
-
-
-
+public class DeviceMsgListener extends MessageListenerAdapter {
+    
     @Autowired
-    public RedisCommonMsgListener(RedisMessageListenerContainer messageListenerContainer) {
-        messageListenerContainer.addMessageListener(this, new PatternTopic(RedisConfConstant.AIDECISION_FINE_RK_LOGIN_TOKEN_PRE));
+    public DeviceMsgListener(RedisMessageListenerContainer messageListenerContainer) {
+        messageListenerContainer.addMessageListener(this, new PatternTopic(MQConstant.DEVICE_CHANGE_MESSAGE_NAME));
     }
 
     @Override

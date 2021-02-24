@@ -5,7 +5,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.tanhao1410.thesis.common.domain.GroupDO;
 import com.github.tanhao1410.thesis.common.mapper.GroupDOMapper;
 import com.github.tanhao1410.thesis.management.service.GroupService;
+import com.github.tanhao1410.thesis.mq.MQConstant;
+import com.github.tanhao1410.thesis.mq.RedisService;
 import org.apache.ibatis.annotations.ResultMap;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +22,9 @@ public class GroupServiceImpl implements GroupService {
 
     @Resource
     private GroupDOMapper groupDOMapper;
+
+    @Autowired
+    private RedisService redisService;
 
     @Override
     public GroupDO getNetworkById(String networkId) throws Exception {
@@ -41,6 +47,10 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public List<GroupDO> getAllNetwork() throws Exception {
         GroupDO queryDo = new GroupDO();
+
+        //测试 redis消息队列
+        redisService.pubMessage(MQConstant.DEVICE_CHANGE_MESSAGE_NAME,"test");
+
         //queryDo.setId(1L);
         queryDo.setX(30);
         ArrayList<GroupDO> res = new ArrayList();

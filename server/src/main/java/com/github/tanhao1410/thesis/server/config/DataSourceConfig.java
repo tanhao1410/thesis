@@ -1,4 +1,4 @@
-package com.github.tanhao1410.thesis.management.config;
+package com.github.tanhao1410.thesis.server.config;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;

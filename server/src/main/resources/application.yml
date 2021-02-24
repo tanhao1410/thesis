@@ -23,9 +23,10 @@ mybatis:
   mapper-locations: classpath:mapper/*.xml
   configuration:
     map-underscore-to-camel-case: true
-server:
-  port: 8888
+netty:
+  server:
+    port: 8888
 logging:
-  file: logs/community.log
+  file: logs/server.log
   level:
     root: info

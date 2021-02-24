@@ -1,0 +1,13 @@
+syntax = "proto3";
+option optimize_for = SPEED; // 加快解析
+option java_package="com.github.tanhao1410.thesis.protocol";   //指定生成到哪个包下
+option java_outer_classname="MessageProtocolInfo"; // 外部类名, 文件名
+
+//protobuf 可以使用message 管理其他的message
+message MessageProtocol {
+  int32 head = 1;
+  int32 len = 2;
+  int32 type = 3;
+  string content = 4;
+}
+

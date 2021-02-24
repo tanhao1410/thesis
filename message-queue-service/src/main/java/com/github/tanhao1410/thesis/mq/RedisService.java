@@ -1,4 +1,4 @@
-package com.github.tanhao1410.thesis.management.redisQueue;
+package com.github.tanhao1410.thesis.mq;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
