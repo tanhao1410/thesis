@@ -4,9 +4,9 @@ import lombok.Getter;
 
 @Getter
 public enum MessageTypeEnum {
-    ALARM(0,"告警数据"),
-    CONFIG(1,"监控配置下发"),
-    CLIENT_INFOO(2,"客户端信息上报"),
+    MONITORING_ALARM(0,"告警数据"),
+    MONITORING_CONFIG(1,"监控配置下发"),
+    CLIENT_INFO(2,"客户端信息上报"),
     MONITORING_DATA(3,"监控数据")
     ;
     private Integer id;
