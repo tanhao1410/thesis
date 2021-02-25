@@ -26,6 +26,6 @@ mybatis:
 server:
   port: 8887
 logging:
-  file: logs/community.log
+  file: logs/management.log
   level:
     root: info
