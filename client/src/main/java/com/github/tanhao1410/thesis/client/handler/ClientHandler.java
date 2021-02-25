@@ -1,9 +1,13 @@
 package com.github.tanhao1410.thesis.client.handler;
 
 import com.alibaba.fastjson.JSON;
-import com.github.tanhao1410.thesis.client.task.MonitoringThreadManage;
+import com.github.tanhao1410.thesis.client.comm.ClientChannelManagement;
+import com.github.tanhao1410.thesis.client.task.MonitoringThreadManagment;
+import com.github.tanhao1410.thesis.client.utils.SystemInfoUtils;
 import com.github.tanhao1410.thesis.protocol.MessageProtocolInfo;
 import com.github.tanhao1410.thesis.protocol.MessageTypeEnum;
+import com.github.tanhao1410.thesis.protocol.TCPProtocolConstant;
+import com.github.tanhao1410.thesis.protocol.bean.ClientInfo;
 import com.github.tanhao1410.thesis.protocol.bean.MonitoringConfig;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -21,14 +25,20 @@ public class ClientHandler extends SimpleChannelInboundHandler<MessageProtocolIn
         //随机的发送Student 或者 Workder 对象
         MessageProtocolInfo.MessageProtocol myMessage = null;
 
-
+        //封装设备基本信息
+        final ClientInfo client = new ClientInfo();
+        client.setOperationSystem(SystemInfoUtils.getOperationSystem());
+        client.setManufacturer(SystemInfoUtils.getManufacturer());
+        final String clientInfoStr = JSON.toJSONString(client);
 
         myMessage = MessageProtocolInfo.MessageProtocol.newBuilder()
-                .setHead(111)
-                .setContent("dddd")
-                .setLen(15)
-                .setType(1)
+                .setHead(TCPProtocolConstant.HEAD)
+                .setContent(clientInfoStr)
+                .setLen(clientInfoStr.length())
+                .setType(MessageTypeEnum.CLIENT_INFO.getId())
                 .build();
+
+        ClientChannelManagement.initCTX(ctx);
 
         ctx.writeAndFlush(myMessage);
     }
@@ -41,7 +51,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<MessageProtocolIn
 
         if(MessageTypeEnum.MONITORING_CONFIG.getId() == messageProtocol.getType() ){
             final List<MonitoringConfig> monitoringConfigs = JSON.parseArray(messageProtocol.getContent(), MonitoringConfig.class);
-            MonitoringThreadManage.startMonitoringThread(monitoringConfigs);
+            MonitoringThreadManagment.startMonitoringThread(monitoringConfigs);
         }else{
             System.out.println("服务端下发了错误信息");
         }
@@ -49,7 +59,6 @@ public class ClientHandler extends SimpleChannelInboundHandler<MessageProtocolIn
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        cause.printStackTrace();
         ctx.close();
     }
 }

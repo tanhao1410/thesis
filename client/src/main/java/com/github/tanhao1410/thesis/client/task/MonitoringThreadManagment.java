@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  * @date 2021/02/24 17:07
  */
 
-public class MonitoringThreadManage {
+public class MonitoringThreadManagment {
 
     private static List<MonitoringThread> monitoringThreadList = new ArrayList<>();
 

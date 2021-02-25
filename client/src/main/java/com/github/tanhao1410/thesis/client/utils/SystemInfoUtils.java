@@ -29,7 +29,7 @@ public class SystemInfoUtils {
      * 返回设备生产厂家系统
      * @return
      */
-    public static String get(){
+    public static String getManufacturer(){
 
         SystemInfo si = new SystemInfo();
         HardwareAbstractionLayer hal = si.getHardware();

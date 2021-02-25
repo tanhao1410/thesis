@@ -27,11 +27,15 @@ public class DeviceMsgListener extends MessageListenerAdapter {
     @Override
     public void onMessage(Message message, byte[] pattern) {
         System.out.println("接收到Redis的消息:" +  new String(message.getBody()));
-        String browseHis = new String(message.getBody());
+        String msgBody = new String(message.getBody());
         //新增浏览记录
         try {
-            browseHis = browseHis.replaceAll("\\\\","");
-            browseHis = browseHis.substring(1,browseHis.length()-1);
+            String msg = msgBody.replaceAll("\\\\","");
+            msg = msg.substring(1,msg.length()-1);
+
+            //设备信息变更后，重新查询该设备的配置信息，从client连接库中找到对应的设备，向它下发新的配置信息
+
+
 
         } catch (Exception e) {
             log.error("DownloadsConsumerService deal error: " + e);
