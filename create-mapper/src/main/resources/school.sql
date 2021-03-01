@@ -11,7 +11,7 @@
  Target Server Version : 50130
  File Encoding         : 65001
 
- Date: 25/02/2021 15:00:17
+ Date: 01/03/2021 14:18:09
 */
 
 SET NAMES utf8mb4;
@@ -41,6 +41,7 @@ CREATE TABLE `device`  (
   `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `group_id` bigint(20) NULL DEFAULT NULL,
   `ip` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `port` int(8) NULL DEFAULT NULL,
   `x` int(11) NULL DEFAULT NULL,
   `y` int(11) NULL DEFAULT NULL,
   `department` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -101,6 +102,10 @@ CREATE TABLE `monitoring_item`  (
   `threshold` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `param` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `alarm_condition` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `level` int(4) NULL DEFAULT NULL,
+  `interval` int(8) NULL DEFAULT NULL,
+  `need_mail` tinyint(1) NULL DEFAULT NULL,
+  `is_alarm` tinyint(1) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
@@ -112,13 +117,9 @@ CREATE TABLE `monitoring_rule`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `method` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `level` int(11) NULL DEFAULT NULL,
-  `interval` int(11) NULL DEFAULT NULL,
-  `need_mail` tinyint(1) NULL DEFAULT NULL,
-  `is_alarm` tinyint(1) NULL DEFAULT NULL,
   `description` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for user

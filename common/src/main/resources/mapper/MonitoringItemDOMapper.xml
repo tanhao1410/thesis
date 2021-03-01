@@ -8,6 +8,378 @@
     <result column="threshold" jdbcType="VARCHAR" property="threshold" />
     <result column="param" jdbcType="VARCHAR" property="param" />
     <result column="alarm_condition" jdbcType="VARCHAR" property="alarmCondition" />
+    <result column="level" jdbcType="INTEGER" property="level" />
+    <result column="interval" jdbcType="INTEGER" property="interval" />
+    <result column="need_mail" jdbcType="BIT" property="needMail" />
+    <result column="is_alarm" jdbcType="BIT" property="isAlarm" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, device_id, monitoring_id, threshold, param, alarm_condition, level, interval, 
+    need_mail, is_alarm
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from monitoring_item
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from monitoring_item
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.github.tanhao1410.thesis.common.domain.MonitoringItemDO">
+    insert into monitoring_item (id, device_id, monitoring_id, 
+      threshold, param, alarm_condition, 
+      level, interval, need_mail, 
+      is_alarm)
+    values (#{id,jdbcType=BIGINT}, #{deviceId,jdbcType=BIGINT}, #{monitoringId,jdbcType=BIGINT}, 
+      #{threshold,jdbcType=VARCHAR}, #{param,jdbcType=VARCHAR}, #{alarmCondition,jdbcType=VARCHAR}, 
+      #{level,jdbcType=INTEGER}, #{interval,jdbcType=INTEGER}, #{needMail,jdbcType=BIT}, 
+      #{isAlarm,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.github.tanhao1410.thesis.common.domain.MonitoringItemDO">
+    insert into monitoring_item
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="deviceId != null">
+        device_id,
+      </if>
+      <if test="monitoringId != null">
+        monitoring_id,
+      </if>
+      <if test="threshold != null">
+        threshold,
+      </if>
+      <if test="param != null">
+        param,
+      </if>
+      <if test="alarmCondition != null">
+        alarm_condition,
+      </if>
+      <if test="level != null">
+        level,
+      </if>
+      <if test="interval != null">
+        interval,
+      </if>
+      <if test="needMail != null">
+        need_mail,
+      </if>
+      <if test="isAlarm != null">
+        is_alarm,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="deviceId != null">
+        #{deviceId,jdbcType=BIGINT},
+      </if>
+      <if test="monitoringId != null">
+        #{monitoringId,jdbcType=BIGINT},
+      </if>
+      <if test="threshold != null">
+        #{threshold,jdbcType=VARCHAR},
+      </if>
+      <if test="param != null">
+        #{param,jdbcType=VARCHAR},
+      </if>
+      <if test="alarmCondition != null">
+        #{alarmCondition,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        #{level,jdbcType=INTEGER},
+      </if>
+      <if test="interval != null">
+        #{interval,jdbcType=INTEGER},
+      </if>
+      <if test="needMail != null">
+        #{needMail,jdbcType=BIT},
+      </if>
+      <if test="isAlarm != null">
+        #{isAlarm,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.github.tanhao1410.thesis.common.domain.MonitoringItemDO">
+    update monitoring_item
+    <set>
+      <if test="deviceId != null">
+        device_id = #{deviceId,jdbcType=BIGINT},
+      </if>
+      <if test="monitoringId != null">
+        monitoring_id = #{monitoringId,jdbcType=BIGINT},
+      </if>
+      <if test="threshold != null">
+        threshold = #{threshold,jdbcType=VARCHAR},
+      </if>
+      <if test="param != null">
+        param = #{param,jdbcType=VARCHAR},
+      </if>
+      <if test="alarmCondition != null">
+        alarm_condition = #{alarmCondition,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        level = #{level,jdbcType=INTEGER},
+      </if>
+      <if test="interval != null">
+        interval = #{interval,jdbcType=INTEGER},
+      </if>
+      <if test="needMail != null">
+        need_mail = #{needMail,jdbcType=BIT},
+      </if>
+      <if test="isAlarm != null">
+        is_alarm = #{isAlarm,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.github.tanhao1410.thesis.common.domain.MonitoringItemDO">
+    update monitoring_item
+    set device_id = #{deviceId,jdbcType=BIGINT},
+      monitoring_id = #{monitoringId,jdbcType=BIGINT},
+      threshold = #{threshold,jdbcType=VARCHAR},
+      param = #{param,jdbcType=VARCHAR},
+      alarm_condition = #{alarmCondition,jdbcType=VARCHAR},
+      level = #{level,jdbcType=INTEGER},
+      interval = #{interval,jdbcType=INTEGER},
+      need_mail = #{needMail,jdbcType=BIT},
+      is_alarm = #{isAlarm,jdbcType=BIT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectCountSelective" resultType="java.lang.Long">
+    select count(1) from monitoring_item
+    <where>
+      <if test="record.deviceId != null">
+         and device_id = #{record.deviceId,jdbcType=BIGINT}
+      </if>
+      <if test="record.monitoringId != null">
+         and monitoring_id = #{record.monitoringId,jdbcType=BIGINT}
+      </if>
+      <if test="record.threshold != null">
+         and threshold = #{record.threshold,jdbcType=VARCHAR}
+      </if>
+      <if test="record.param != null">
+         and param = #{record.param,jdbcType=VARCHAR}
+      </if>
+      <if test="record.alarmCondition != null">
+         and alarm_condition = #{record.alarmCondition,jdbcType=VARCHAR}
+      </if>
+      <if test="record.level != null">
+         and level = #{record.level,jdbcType=INTEGER}
+      </if>
+      <if test="record.interval != null">
+         and interval = #{record.interval,jdbcType=INTEGER}
+      </if>
+      <if test="record.needMail != null">
+         and need_mail = #{record.needMail,jdbcType=BIT}
+      </if>
+      <if test="record.isAlarm != null">
+         and is_alarm = #{record.isAlarm,jdbcType=BIT}
+      </if>
+    </where>
+  </select>
+  <select id="selectPageSelective" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+     from monitoring_item
+    <where>
+      <if test="record.deviceId != null">
+         and device_id = #{record.deviceId,jdbcType=BIGINT}
+      </if>
+      <if test="record.monitoringId != null">
+         and monitoring_id = #{record.monitoringId,jdbcType=BIGINT}
+      </if>
+      <if test="record.threshold != null">
+         and threshold = #{record.threshold,jdbcType=VARCHAR}
+      </if>
+      <if test="record.param != null">
+         and param = #{record.param,jdbcType=VARCHAR}
+      </if>
+      <if test="record.alarmCondition != null">
+         and alarm_condition = #{record.alarmCondition,jdbcType=VARCHAR}
+      </if>
+      <if test="record.level != null">
+         and level = #{record.level,jdbcType=INTEGER}
+      </if>
+      <if test="record.interval != null">
+         and interval = #{record.interval,jdbcType=INTEGER}
+      </if>
+      <if test="record.needMail != null">
+         and need_mail = #{record.needMail,jdbcType=BIT}
+      </if>
+      <if test="record.isAlarm != null">
+         and is_alarm = #{record.isAlarm,jdbcType=BIT}
+      </if>
+      <if test="pageable.sort != null">
+         order by 
+        <foreach collection="pageable.sort" item="order" separator=",">
+          <if test="order.property == 'id' || order.property == 'device_id'  || order.property == 'monitoring_id'  || order.property == 'threshold'  || order.property == 'param'  || order.property == 'alarm_condition'  || order.property == 'level'  || order.property == 'interval'  || order.property == 'need_mail'  || order.property == 'is_alarm' ">
+             ${order.property} ${order.direction} 
+          </if>
+        </foreach>
+      </if>
+      <if test="pageable.offset &gt;= 0 and pageable.pageSize &gt; 0">
+        limit ${pageable.offset}, ${pageable.pageSize}
+      </if>
+    </where>
+  </select>
+  <update id="batchDeleteByPrimaryKey" parameterType="java.util.List">
+    update monitoring_item set isactive = 0 where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+       ${item} 
+    </foreach>
+    and isactive = 1
+  </update>
+  <insert id="insertSelectiveReturnPrimaryKey" parameterType="com.github.tanhao1410.thesis.common.domain.MonitoringItemDO">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      select LAST_INSERT_ID() as id
+    </selectKey>
+    insert into monitoring_item
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="deviceId != null">
+        device_id,
+      </if>
+      <if test="monitoringId != null">
+        monitoring_id,
+      </if>
+      <if test="threshold != null">
+        threshold,
+      </if>
+      <if test="param != null">
+        param,
+      </if>
+      <if test="alarmCondition != null">
+        alarm_condition,
+      </if>
+      <if test="level != null">
+        level,
+      </if>
+      <if test="interval != null">
+        interval,
+      </if>
+      <if test="needMail != null">
+        need_mail,
+      </if>
+      <if test="isAlarm != null">
+        is_alarm,
+      </if>
+    </trim>
+    <trim prefix=" values (" suffix=")" suffixOverrides=",">
+      <if test="deviceId != null">
+        #{deviceId,jdbcType=BIGINT},
+      </if>
+      <if test="monitoringId != null">
+        #{monitoringId,jdbcType=BIGINT},
+      </if>
+      <if test="threshold != null">
+        #{threshold,jdbcType=VARCHAR},
+      </if>
+      <if test="param != null">
+        #{param,jdbcType=VARCHAR},
+      </if>
+      <if test="alarmCondition != null">
+        #{alarmCondition,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        #{level,jdbcType=INTEGER},
+      </if>
+      <if test="interval != null">
+        #{interval,jdbcType=INTEGER},
+      </if>
+      <if test="needMail != null">
+        #{needMail,jdbcType=BIT},
+      </if>
+      <if test="isAlarm != null">
+        #{isAlarm,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <insert id="batchInsert" parameterType="com.github.tanhao1410.thesis.common.domain.MonitoringItemDO">
+    insert into monitoring_item (device_id,monitoring_id,threshold,param,alarm_condition,level,interval,need_mail,is_alarm ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+       (#{item.deviceId,jdbcType=BIGINT},#{item.monitoringId,jdbcType=BIGINT},#{item.threshold,jdbcType=VARCHAR},#{item.param,jdbcType=VARCHAR},#{item.alarmCondition,jdbcType=VARCHAR},#{item.level,jdbcType=INTEGER},#{item.interval,jdbcType=INTEGER},#{item.needMail,jdbcType=BIT},#{item.isAlarm,jdbcType=BIT} ) 
+    </foreach>
+  </insert>
+  <select id="batchSelectByPrimaryKey" parameterType="java.util.List" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+     from monitoring_item where id in
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+       ${item} 
+    </foreach>
+  </select>
+  <insert id="insertIgnoreSelective" parameterType="com.github.tanhao1410.thesis.common.domain.MonitoringItemDO">
+    insert ignore into monitoring_item
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="deviceId != null">
+        device_id,
+      </if>
+      <if test="monitoringId != null">
+        monitoring_id,
+      </if>
+      <if test="threshold != null">
+        threshold,
+      </if>
+      <if test="param != null">
+        param,
+      </if>
+      <if test="alarmCondition != null">
+        alarm_condition,
+      </if>
+      <if test="level != null">
+        level,
+      </if>
+      <if test="interval != null">
+        interval,
+      </if>
+      <if test="needMail != null">
+        need_mail,
+      </if>
+      <if test="isAlarm != null">
+        is_alarm,
+      </if>
+    </trim>
+    <trim prefix=" values (" suffix=")" suffixOverrides=",">
+      <if test="deviceId != null">
+        #{deviceId,jdbcType=BIGINT},
+      </if>
+      <if test="monitoringId != null">
+        #{monitoringId,jdbcType=BIGINT},
+      </if>
+      <if test="threshold != null">
+        #{threshold,jdbcType=VARCHAR},
+      </if>
+      <if test="param != null">
+        #{param,jdbcType=VARCHAR},
+      </if>
+      <if test="alarmCondition != null">
+        #{alarmCondition,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        #{level,jdbcType=INTEGER},
+      </if>
+      <if test="interval != null">
+        #{interval,jdbcType=INTEGER},
+      </if>
+      <if test="needMail != null">
+        #{needMail,jdbcType=BIT},
+      </if>
+      <if test="isAlarm != null">
+        #{isAlarm,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <resultMap id="BaseResultMap" type="com.github.tanhao1410.thesis.common.domain.MonitoringItemDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="device_id" jdbcType="BIGINT" property="deviceId" />
+    <result column="monitoring_id" jdbcType="BIGINT" property="monitoringId" />
+    <result column="threshold" jdbcType="VARCHAR" property="threshold" />
+    <result column="param" jdbcType="VARCHAR" property="param" />
+    <result column="alarm_condition" jdbcType="VARCHAR" property="alarmCondition" />
   </resultMap>
   <sql id="Base_Column_List">
     id, device_id, monitoring_id, threshold, param, alarm_condition
@@ -151,7 +523,7 @@
           </if>
         </foreach>
       </if>
-      <if test="pageable.offset >= 0 and pageable.pageSize > 0">
+      <if test="pageable.offset &gt;= 0 and pageable.pageSize &gt; 0">
         limit ${pageable.offset}, ${pageable.pageSize}
       </if>
     </where>

@@ -168,7 +168,289 @@
           </if>
         </foreach>
       </if>
-      <if test="pageable.offset >= 0 and pageable.pageSize > 0">
+      <if test="pageable.offset &gt;= 0 and pageable.pageSize &gt; 0">
+        limit ${pageable.offset}, ${pageable.pageSize}
+      </if>
+    </where>
+  </select>
+  <update id="batchDeleteByPrimaryKey" parameterType="java.util.List">
+    update user set isactive = 0 where id in 
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+       ${item} 
+    </foreach>
+    and isactive = 1
+  </update>
+  <insert id="insertSelectiveReturnPrimaryKey" parameterType="com.github.tanhao1410.thesis.common.domain.UserDO">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      select LAST_INSERT_ID() as id
+    </selectKey>
+    insert into user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        name,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="department != null">
+        department,
+      </if>
+    </trim>
+    <trim prefix=" values (" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="department != null">
+        #{department,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <insert id="batchInsert" parameterType="com.github.tanhao1410.thesis.common.domain.UserDO">
+    insert into user (name,password,email,type,phone,department ) values 
+    <foreach collection="list" index="index" item="item" separator=",">
+       (#{item.name,jdbcType=VARCHAR},#{item.password,jdbcType=VARCHAR},#{item.email,jdbcType=VARCHAR},#{item.type,jdbcType=INTEGER},#{item.phone,jdbcType=VARCHAR},#{item.department,jdbcType=VARCHAR} ) 
+    </foreach>
+  </insert>
+  <select id="batchSelectByPrimaryKey" parameterType="java.util.List" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+     from user where id in
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+       ${item} 
+    </foreach>
+  </select>
+  <insert id="insertIgnoreSelective" parameterType="com.github.tanhao1410.thesis.common.domain.UserDO">
+    insert ignore into user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        name,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="department != null">
+        department,
+      </if>
+    </trim>
+    <trim prefix=" values (" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="department != null">
+        #{department,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <resultMap id="BaseResultMap" type="com.github.tanhao1410.thesis.common.domain.UserDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="department" jdbcType="VARCHAR" property="department" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, password, email, type, phone, department
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from user
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.github.tanhao1410.thesis.common.domain.UserDO">
+    insert into user (id, name, password, 
+      email, type, phone, 
+      department)
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR}, 
+      #{department,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.github.tanhao1410.thesis.common.domain.UserDO">
+    insert into user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="department != null">
+        department,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="department != null">
+        #{department,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.github.tanhao1410.thesis.common.domain.UserDO">
+    update user
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="department != null">
+        department = #{department,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.github.tanhao1410.thesis.common.domain.UserDO">
+    update user
+    set name = #{name,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      phone = #{phone,jdbcType=VARCHAR},
+      department = #{department,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectCountSelective" resultType="java.lang.Long">
+    select count(1) from user
+    <where>
+      <if test="record.name != null">
+         and name = #{record.name,jdbcType=VARCHAR}
+      </if>
+      <if test="record.password != null">
+         and password = #{record.password,jdbcType=VARCHAR}
+      </if>
+      <if test="record.email != null">
+         and email = #{record.email,jdbcType=VARCHAR}
+      </if>
+      <if test="record.type != null">
+         and type = #{record.type,jdbcType=INTEGER}
+      </if>
+      <if test="record.phone != null">
+         and phone = #{record.phone,jdbcType=VARCHAR}
+      </if>
+      <if test="record.department != null">
+         and department = #{record.department,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </select>
+  <select id="selectPageSelective" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+     from user
+    <where>
+      <if test="record.name != null">
+         and name = #{record.name,jdbcType=VARCHAR}
+      </if>
+      <if test="record.password != null">
+         and password = #{record.password,jdbcType=VARCHAR}
+      </if>
+      <if test="record.email != null">
+         and email = #{record.email,jdbcType=VARCHAR}
+      </if>
+      <if test="record.type != null">
+         and type = #{record.type,jdbcType=INTEGER}
+      </if>
+      <if test="record.phone != null">
+         and phone = #{record.phone,jdbcType=VARCHAR}
+      </if>
+      <if test="record.department != null">
+         and department = #{record.department,jdbcType=VARCHAR}
+      </if>
+      <if test="pageable.sort != null">
+         order by 
+        <foreach collection="pageable.sort" item="order" separator=",">
+          <if test="order.property == 'id' || order.property == 'name'  || order.property == 'password'  || order.property == 'email'  || order.property == 'type'  || order.property == 'phone'  || order.property == 'department' ">
+             ${order.property} ${order.direction} 
+          </if>
+        </foreach>
+      </if>
+      <if test="pageable.offset &gt;= 0 and pageable.pageSize &gt; 0">
         limit ${pageable.offset}, ${pageable.pageSize}
       </if>
     </where>

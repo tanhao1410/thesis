@@ -7,7 +7,7 @@ import lombok.ToString;
 /**
  * 框架自动生成表模型和CRUD操作，勿修改；
  * 如特殊需要，请以Ext***Mapper自行扩展；
- * 生成日期 : 2021-02-23 11:01:49
+ * 生成日期 : 2021-03-01 14:17:01
  * @author ##tanhao##
  */
 @Setter
@@ -21,6 +21,8 @@ public class DeviceDO {
     private Long groupId;
 
     private String ip;
+
+    private Integer port;
 
     private Integer x;
 
