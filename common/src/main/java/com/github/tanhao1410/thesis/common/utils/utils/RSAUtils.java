@@ -1,4 +1,4 @@
-package com.github.tanhao1410.thesis.management.utils;
+package com.github.tanhao1410.thesis.common.utils.utils;
 
 import javax.crypto.Cipher;
 import java.security.*;

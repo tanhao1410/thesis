@@ -1,4 +1,4 @@
-package com.github.tanhao1410.thesis.management.bean.response;
+package com.github.tanhao1410.thesis.common.bean.response;
 
 import lombok.Getter;
 import lombok.Setter;

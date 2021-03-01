@@ -1,4 +1,4 @@
-package com.github.tanhao1410.thesis.management.bean;
+package com.github.tanhao1410.thesis.common.bean;
 
 /**
  * 对于没有请求的返回此信息

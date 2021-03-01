@@ -1,11 +1,11 @@
-package com.github.tanhao1410.thesis.management.service;
+package com.github.tanhao1410.thesis.user.service;
 
 
 
-import com.github.tanhao1410.thesis.management.bean.ResultContentVO;
-import com.github.tanhao1410.thesis.management.bean.UserBean;
-import com.github.tanhao1410.thesis.management.bean.request.LoginOutRequest;
-import com.github.tanhao1410.thesis.management.bean.response.LoginResponse;
+import com.github.tanhao1410.thesis.common.bean.ResultContentVO;
+import com.github.tanhao1410.thesis.common.bean.UserBean;
+import com.github.tanhao1410.thesis.common.bean.request.LoginOutRequest;
+import com.github.tanhao1410.thesis.common.bean.response.LoginResponse;
 
 import java.util.Map;
 

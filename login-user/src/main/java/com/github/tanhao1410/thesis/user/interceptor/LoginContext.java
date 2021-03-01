@@ -1,4 +1,4 @@
-package com.github.tanhao1410.thesis.management.interceptor;
+package com.github.tanhao1410.thesis.user.interceptor;
 
 import org.springframework.web.bind.annotation.Mapping;
 

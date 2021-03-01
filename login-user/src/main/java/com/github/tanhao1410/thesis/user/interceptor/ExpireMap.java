@@ -1,4 +1,4 @@
-package com.github.tanhao1410.thesis.management.interceptor;
+package com.github.tanhao1410.thesis.user.interceptor;
 
 import lombok.extern.slf4j.Slf4j;
 import net.jodah.expiringmap.ExpirationPolicy;

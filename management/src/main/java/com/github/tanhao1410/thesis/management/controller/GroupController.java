@@ -2,7 +2,7 @@ package com.github.tanhao1410.thesis.management.controller;
 
 import com.alibaba.fastjson.JSONObject;
 
-import com.github.tanhao1410.thesis.management.bean.ActionResult;
+import com.github.tanhao1410.thesis.common.bean.ActionResult;
 import com.github.tanhao1410.thesis.common.domain.GroupDO;
 import com.github.tanhao1410.thesis.management.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;

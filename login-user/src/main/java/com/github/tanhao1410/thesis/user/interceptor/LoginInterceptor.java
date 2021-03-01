@@ -1,13 +1,13 @@
-package com.github.tanhao1410.thesis.management.interceptor;
+package com.github.tanhao1410.thesis.user.interceptor;
 
 import com.alibaba.fastjson.JSONObject;
-import com.github.tanhao1410.thesis.management.bean.ResultContentVO;
-import com.github.tanhao1410.thesis.management.bean.UserBean;
-import com.github.tanhao1410.thesis.management.constant.RedisConfConstant;
+
+import com.github.tanhao1410.thesis.common.bean.ResultContentVO;
+import com.github.tanhao1410.thesis.common.bean.UserBean;
+import com.github.tanhao1410.thesis.common.constants.RedisConfConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
-
 
 
 /**

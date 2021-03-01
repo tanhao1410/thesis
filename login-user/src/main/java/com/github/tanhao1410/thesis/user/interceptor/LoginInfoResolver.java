@@ -1,6 +1,6 @@
-package com.github.tanhao1410.thesis.management.interceptor;
+package com.github.tanhao1410.thesis.user.interceptor;
 
-import com.github.tanhao1410.thesis.management.bean.UserBean;
+import com.github.tanhao1410.thesis.common.bean.UserBean;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
