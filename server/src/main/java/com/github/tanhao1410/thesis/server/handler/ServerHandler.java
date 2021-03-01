@@ -1,6 +1,7 @@
 package com.github.tanhao1410.thesis.server.handler;
 
 import com.alibaba.fastjson.JSON;
+import com.github.tanhao1410.thesis.common.domain.MonitoringDataDO;
 import com.github.tanhao1410.thesis.common.mapper.AlarmDOMapper;
 import com.github.tanhao1410.thesis.common.mapper.HistoryAlarmDOMapper;
 import com.github.tanhao1410.thesis.common.mapper.MonitoringDataDOMapper;
@@ -9,12 +10,14 @@ import com.github.tanhao1410.thesis.mq.RedisService;
 import com.github.tanhao1410.thesis.protocol.MessageProtocolInfo;
 import com.github.tanhao1410.thesis.protocol.MessageTypeEnum;
 import com.github.tanhao1410.thesis.protocol.bean.ClientInfo;
+import com.github.tanhao1410.thesis.protocol.bean.MonitoringData;
 import com.github.tanhao1410.thesis.server.comm.ClientChannelManagment;
 import com.github.tanhao1410.thesis.server.spring.SpringBeanManagement;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
 import java.net.InetSocketAddress;
+import java.util.Date;
 
 /*
 说明
@@ -55,10 +58,8 @@ public class ServerHandler extends SimpleChannelInboundHandler<MessageProtocolIn
             final InetSocketAddress socketAddress = (InetSocketAddress)ctx.channel().remoteAddress();
             String ip = socketAddress.getAddress().getHostAddress();
             int port = socketAddress.getPort();
-            System.out.println(clientInfo.getOperationSystem());
-            System.out.println(clientInfo.getManufacturer());
-            System.out.println(ip);
-            System.out.println(port);
+            //客户端信息上传
+            System.out.println("客户端信息上传ip :" + ip +  " port : "  + port);
 
             //将客户端放入管理类中管理
             ClientChannelManagment.clientChannelJoin(ctx,clientInfo);
@@ -74,6 +75,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<MessageProtocolIn
             //
             //不一样，更新告警，更新历史告警
 
+
             //更新历史告警
 
             //通知management系统，告警发生变更
@@ -86,7 +88,16 @@ public class ServerHandler extends SimpleChannelInboundHandler<MessageProtocolIn
 
             final MonitoringDataDOMapper monitoringDataDOMapper = SpringBeanManagement.monitoringDataDOMapper;
 
+            MonitoringData monitoringData = JSON.parseObject(msg.getContent(),MonitoringData.class);
             //转换成数据库格式，直接保存即可
+            MonitoringDataDO dataDO = new MonitoringDataDO();
+            dataDO.setDeviceId(monitoringData.getDeviceId());
+            dataDO.setName(monitoringData.getName());
+            dataDO.setRuleId(monitoringData.getRuleId());
+            dataDO.setStartTime(new Date(monitoringData.getTime()));
+            dataDO.setValue(monitoringData.getValue());
+            //存入数据库
+            monitoringDataDOMapper.insert(dataDO);
 
         }
     }

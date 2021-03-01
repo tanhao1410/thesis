@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
  * @author tanhao
  * @date 2021/02/24 12:47
  */
-public class CPUCollectMethod extends AbstractCollectMethod {
+public class CPUUsageCollectMethod extends AbstractCollectMethod {
 
 
     @Override

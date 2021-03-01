@@ -51,6 +51,9 @@ public class NettyClient {
                 bootstrap.option(ChannelOption.SO_KEEPALIVE, true);
                 bootstrap.handler(nettyClientInitializer);
                 bootstrap.remoteAddress(host, port);
+                //bootstrap.bind(10000);
+                //bootstrap.bind("127.0.0.2",10001);
+                bootstrap.localAddress("127.0.0.2",10001);
                 f = bootstrap.connect().addListener((ChannelFuture futureListener) -> {
                     final EventLoop eventLoop = futureListener.channel().eventLoop();
                     if (!futureListener.isSuccess()) {

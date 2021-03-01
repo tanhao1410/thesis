@@ -13,6 +13,8 @@ public class DeviceChangeMsg {
 
     private Long id;
     private Integer type;
+    private String ip;
+    private Integer port;
 
     @Getter
     public enum Type {

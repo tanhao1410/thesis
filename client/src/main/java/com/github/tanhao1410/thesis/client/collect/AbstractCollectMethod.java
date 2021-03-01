@@ -1,12 +1,10 @@
 package com.github.tanhao1410.thesis.client.collect;
 
-import com.github.tanhao1410.thesis.client.collect.impl.CPUCollectMethod;
-import com.github.tanhao1410.thesis.client.collect.impl.MemCollectMethod;
+import com.github.tanhao1410.thesis.client.collect.impl.CPUUsageCollectMethod;
+import com.github.tanhao1410.thesis.client.collect.impl.MemUsageCollectMethod;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * 抽象采集方法
@@ -43,11 +41,11 @@ public abstract class AbstractCollectMethod {
     private static Map<String, AbstractCollectMethod> methods = new HashMap<>();
 
     static {
-        final CPUCollectMethod cpuCollectMethod = new CPUCollectMethod();
-        final MemCollectMethod memCollectMethod = new MemCollectMethod();
+        final CPUUsageCollectMethod cpuUsageCollectMethod = new CPUUsageCollectMethod();
+        final MemUsageCollectMethod memUsageCollectMethod = new MemUsageCollectMethod();
 
-        methods.put(cpuCollectMethod.getName(), cpuCollectMethod);
-        methods.put(memCollectMethod.getName(), memCollectMethod);
+        methods.put(cpuUsageCollectMethod.getName(), cpuUsageCollectMethod);
+        methods.put(memUsageCollectMethod.getName(), memUsageCollectMethod);
     }
 
 }

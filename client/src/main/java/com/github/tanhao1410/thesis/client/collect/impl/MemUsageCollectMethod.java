@@ -9,7 +9,7 @@ import java.lang.management.ManagementFactory;
  * @author tanhao
  * @date 2021/02/24 13:19
  */
-public class MemCollectMethod extends AbstractCollectMethod {
+public class MemUsageCollectMethod extends AbstractCollectMethod {
     @Override
     public String getName() {
         return "内存使用率监控方法";

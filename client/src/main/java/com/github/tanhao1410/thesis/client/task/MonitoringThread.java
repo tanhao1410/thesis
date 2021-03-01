@@ -8,8 +8,10 @@ import com.github.tanhao1410.thesis.protocol.MessageTypeEnum;
 import com.github.tanhao1410.thesis.protocol.TCPProtocolConstant;
 import com.github.tanhao1410.thesis.protocol.bean.MonitoringAlarm;
 import com.github.tanhao1410.thesis.protocol.bean.MonitoringConfig;
+import com.github.tanhao1410.thesis.protocol.bean.MonitoringData;
 import io.netty.channel.ChannelHandlerContext;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,6 +21,8 @@ import java.util.List;
  * @date 2021/02/24 11:21
  */
 public class MonitoringThread extends Thread {
+
+    private volatile boolean stop = false;
 
     //监控方法
     private AbstractCollectMethod method;
@@ -34,11 +38,17 @@ public class MonitoringThread extends Thread {
         this.channelHandlerContext = ClientChannelManagement.getCTX();
     }
 
+    /**
+     * 停止采集
+     */
+    void stopThread(){
+        stop = true;
+    }
 
     @Override
     public void run() {
 
-        while (true) {
+        while (!stop) {
 
             //本次监测开始时间
             long startTime = System.currentTimeMillis();
@@ -66,7 +76,22 @@ public class MonitoringThread extends Thread {
                 //数据监控
 
                 //直接传递给服务端结果即可。
+                MonitoringData monitoringData = new MonitoringData();
 
+                monitoringData.setName(config.getName());
+                monitoringData.setRuleId(config.getRuleId());
+                monitoringData.setTime(System.currentTimeMillis());
+                monitoringData.setValue(method.getValue(config.getParam()));
+
+                final String monitoringDataStr = JSON.toJSONString(monitoringData);
+                final MessageProtocolInfo.MessageProtocol msg = MessageProtocolInfo.MessageProtocol.newBuilder()
+                        .setHead(TCPProtocolConstant.HEAD)
+                        .setContent(monitoringDataStr)
+                        .setLen(monitoringDataStr.length())
+                        .setType(MessageTypeEnum.MONITORING_DATA.getId())
+                        .build();
+
+                channelHandlerContext.writeAndFlush(msg);
             }
 
 

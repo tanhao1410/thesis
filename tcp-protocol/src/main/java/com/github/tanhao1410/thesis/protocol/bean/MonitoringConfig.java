@@ -24,6 +24,10 @@ public class MonitoringConfig implements Serializable {
      */
     private Integer interval;
 
+    private Long ruleId;
+
+    private String name;
+
 
 
     //监控项相关

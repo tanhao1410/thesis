@@ -22,7 +22,7 @@ public class MonitoringThreadManagment {
 
         //停止原来的轮询，开始新的轮询计划
         monitoringThreadList.forEach(e -> {
-            e.stop();
+            e.stopThread();
         });
         monitoringThreadList.removeAll(monitoringThreadList);
 

@@ -12,7 +12,7 @@ import java.text.DecimalFormat;
  * @author tanhao
  * @date 2021/02/24 13:19
  */
-public class DiskCollectMethod extends AbstractCollectMethod {
+public class DiskUsageCollectMethod extends AbstractCollectMethod {
     @Override
     public String getName() {
         return "磁盘使用率监控方法";

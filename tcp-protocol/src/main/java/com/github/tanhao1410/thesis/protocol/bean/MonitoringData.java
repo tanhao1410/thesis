@@ -21,4 +21,10 @@ public class MonitoringData {
      */
     private String value;
 
+    private Long ruleId;
+
+    private String name;
+
+    private Long deviceId;
+
 }
