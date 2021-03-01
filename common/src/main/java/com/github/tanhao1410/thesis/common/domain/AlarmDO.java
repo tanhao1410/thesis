@@ -8,7 +8,7 @@ import lombok.ToString;
 /**
  * 框架自动生成表模型和CRUD操作，勿修改；
  * 如特殊需要，请以Ext***Mapper自行扩展；
- * 生成日期 : 2021-03-01 14:17:01
+ * 生成日期 : 2021-03-01 16:27:59
  * @author ##tanhao##
  */
 @Setter
@@ -27,5 +27,5 @@ public class AlarmDO {
 
     private Date startTime;
 
-    private Integer status;
+    private Boolean isNormal;
 }

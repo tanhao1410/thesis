@@ -21,6 +21,10 @@ public class NettyClient {
 
     @Value("${netty.server.port}")
     private int port; // 端口
+    @Value("${netty.client.ip}")
+    private String localIp;
+    @Value("${netty.client.port}")
+    private int localPort;
     // 通过nio方式来接收连接和处理连接
     private EventLoopGroup group = new NioEventLoopGroup();
 
@@ -53,7 +57,7 @@ public class NettyClient {
                 bootstrap.remoteAddress(host, port);
                 //bootstrap.bind(10000);
                 //bootstrap.bind("127.0.0.2",10001);
-                bootstrap.localAddress("127.0.0.2",10001);
+                bootstrap.localAddress(localIp,localPort);
                 f = bootstrap.connect().addListener((ChannelFuture futureListener) -> {
                     final EventLoop eventLoop = futureListener.channel().eventLoop();
                     if (!futureListener.isSuccess()) {

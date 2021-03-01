@@ -3,9 +3,10 @@ package com.github.tanhao1410.thesis.server.mqconsumer;
 import com.alibaba.fastjson.JSON;
 import com.github.tanhao1410.thesis.common.domain.AlarmDO;
 import com.github.tanhao1410.thesis.common.domain.DeviceDO;
-import com.github.tanhao1410.thesis.common.domain.HistoryAlarmDO;
-import com.github.tanhao1410.thesis.common.domain.MonitoringItemDO;
-import com.github.tanhao1410.thesis.common.mapper.*;
+import com.github.tanhao1410.thesis.common.mapper.AlarmDOMapper;
+import com.github.tanhao1410.thesis.common.mapper.DeviceDOMapper;
+import com.github.tanhao1410.thesis.common.mapper.HistoryAlarmDOMapper;
+import com.github.tanhao1410.thesis.common.mapper.MonitoringItemDOMapper;
 import com.github.tanhao1410.thesis.mq.MQConstant;
 import com.github.tanhao1410.thesis.mq.bean.DeviceChangeMsg;
 import com.github.tanhao1410.thesis.protocol.MessageProtocolInfo;
@@ -13,10 +14,11 @@ import com.github.tanhao1410.thesis.protocol.MessageTypeEnum;
 import com.github.tanhao1410.thesis.protocol.TCPProtocolConstant;
 import com.github.tanhao1410.thesis.protocol.bean.MonitoringConfig;
 import com.github.tanhao1410.thesis.server.comm.ClientChannelManagment;
+import com.github.tanhao1410.thesis.server.service.ClientCommService;
+import com.github.tanhao1410.thesis.server.service.MonitoringConfigService;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.listener.PatternTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
@@ -27,9 +29,6 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author tanhao
@@ -48,6 +47,10 @@ public class DeviceMsgListener extends MessageListenerAdapter {
     private DeviceDOMapper deviceDOMapper;
     @Resource
     private MonitoringItemDOMapper monitoringItemDOMapper;
+    @Resource
+    private MonitoringConfigService monitoringConfigService;
+    @Resource
+    private ClientCommService clientCommService;
     
     @Autowired
     public DeviceMsgListener(RedisMessageListenerContainer messageListenerContainer) {
@@ -81,7 +84,7 @@ public class DeviceMsgListener extends MessageListenerAdapter {
                     record.setRuleId(1L);
                     record.setStartTime(new Date(System.currentTimeMillis()));
                     record.setValue("0");
-                    record.setStatus(1);
+                    record.setIsNormal(false);
 
                     alarmDOMapper.insert(record);
 
@@ -109,31 +112,9 @@ public class DeviceMsgListener extends MessageListenerAdapter {
                         .build();
                 ctx.writeAndFlush(configMsg);
 
-
             }else if (msgObj.getType() == DeviceChangeMsg.Type.UPDATE.getId()){
                 //向客户端下发新的配置信息
-
-                //查询出该设备所有的监控项
-                MonitoringItemDO queryDo = new MonitoringItemDO();
-                queryDo.setDeviceId(msgObj.getId());
-                final List<MonitoringItemDO> monitoringItemDOS = monitoringItemDOMapper.selectPageSelective(queryDo, new PageRequest(0, Integer.MAX_VALUE));
-
-                //根据配置项生成 返回的配置结果
-                final List<MonitoringConfig> configs = monitoringItemDOS.stream().map(e -> {
-                    MonitoringConfig config = new MonitoringConfig();
-                    //todo
-                    return config;
-                }).collect(Collectors.toList());
-
-                String content = JSON.toJSONString(configs);
-                final MessageProtocolInfo.MessageProtocol configMsg = MessageProtocolInfo.MessageProtocol.newBuilder()
-                        .setHead(TCPProtocolConstant.HEAD)
-                        .setContent(content)
-                        .setLen(content.length())
-                        .setType(MessageTypeEnum.MONITORING_CONFIG.getId())
-                        .build();
-                ctx.writeAndFlush(configMsg);
-
+                clientCommService.sendMonitoringConfig(msgObj.getId());
             }
 
         } catch (Exception e) {

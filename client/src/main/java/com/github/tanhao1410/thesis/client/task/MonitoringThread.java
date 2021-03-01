@@ -6,6 +6,7 @@ import com.github.tanhao1410.thesis.client.comm.ClientChannelManagement;
 import com.github.tanhao1410.thesis.protocol.MessageProtocolInfo;
 import com.github.tanhao1410.thesis.protocol.MessageTypeEnum;
 import com.github.tanhao1410.thesis.protocol.TCPProtocolConstant;
+import com.github.tanhao1410.thesis.protocol.bean.AlarmConditionEnum;
 import com.github.tanhao1410.thesis.protocol.bean.MonitoringAlarm;
 import com.github.tanhao1410.thesis.protocol.bean.MonitoringConfig;
 import com.github.tanhao1410.thesis.protocol.bean.MonitoringData;
@@ -48,6 +49,10 @@ public class MonitoringThread extends Thread {
     @Override
     public void run() {
 
+        System.out.println("信息采集客户端启动采集线程："+method.getName());
+
+        Boolean preStatus = null;
+
         while (!stop) {
 
             //本次监测开始时间
@@ -62,6 +67,19 @@ public class MonitoringThread extends Thread {
 
                 MonitoringAlarm alarmInfo = new MonitoringAlarm();
 
+                alarmInfo.setTime(System.currentTimeMillis());
+                alarmInfo.setValue(value);
+                alarmInfo.setDeviceId(config.getDeviceId());
+                alarmInfo.setName(method.getName());
+                alarmInfo.setRuleId(config.getRuleId());
+
+                final boolean status = AlarmConditionEnum.isAlarm(value, config.getThreshold(), config.getAlarmCondition());
+                alarmInfo.setIsNormal(status);
+
+                if(preStatus != null && preStatus.equals(status)){
+                    continue;
+                }
+
                 final String alarmInfoStr = JSON.toJSONString(alarmInfo);
                 //组件告警
                 final MessageProtocolInfo.MessageProtocol msg = MessageProtocolInfo.MessageProtocol.newBuilder()
@@ -70,6 +88,8 @@ public class MonitoringThread extends Thread {
                         .setLen(alarmInfoStr.length())
                         .setType(MessageTypeEnum.MONITORING_ALARM.getId())
                         .build();
+
+                System.out.println("上传了告警数据：" + alarmInfoStr);
                 channelHandlerContext.writeAndFlush(msg);
 
             } else if (config.getType() == MessageTypeEnum.MONITORING_DATA.getId()) {
@@ -78,10 +98,11 @@ public class MonitoringThread extends Thread {
                 //直接传递给服务端结果即可。
                 MonitoringData monitoringData = new MonitoringData();
 
-                monitoringData.setName(config.getName());
+                monitoringData.setName(config.getMonitoringMethod());
                 monitoringData.setRuleId(config.getRuleId());
                 monitoringData.setTime(System.currentTimeMillis());
                 monitoringData.setValue(method.getValue(config.getParam()));
+                monitoringData.setDeviceId(config.getDeviceId());
 
                 final String monitoringDataStr = JSON.toJSONString(monitoringData);
                 final MessageProtocolInfo.MessageProtocol msg = MessageProtocolInfo.MessageProtocol.newBuilder()
@@ -90,6 +111,8 @@ public class MonitoringThread extends Thread {
                         .setLen(monitoringDataStr.length())
                         .setType(MessageTypeEnum.MONITORING_DATA.getId())
                         .build();
+
+                System.out.println("上传了性能监控数据：" + monitoringDataStr);
 
                 channelHandlerContext.writeAndFlush(msg);
             }

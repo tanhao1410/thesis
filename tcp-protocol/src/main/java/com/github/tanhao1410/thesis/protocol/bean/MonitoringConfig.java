@@ -26,8 +26,7 @@ public class MonitoringConfig implements Serializable {
 
     private Long ruleId;
 
-    private String name;
-
+    private Long deviceId;
 
 
     //监控项相关

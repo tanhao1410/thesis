@@ -2,6 +2,9 @@ netty:
   server:
     port: 8888
     ip: 127.0.0.1
+  client:
+    port: 10001
+    ip: 127.0.0.2
 logging:
   file: logs/client.log
   level:

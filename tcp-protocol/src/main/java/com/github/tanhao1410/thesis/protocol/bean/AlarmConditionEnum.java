@@ -2,8 +2,11 @@ package com.github.tanhao1410.thesis.protocol.bean;
 
 import lombok.Getter;
 
+import java.math.BigDecimal;
+
 /**
  * 告警判断条件枚举
+ *
  * @author tanhao
  * @date 2021/02/25 13:37
  */
@@ -29,12 +32,23 @@ public enum AlarmConditionEnum {
 
     /**
      * 判断是否产生告警
+     *
      * @param value
      * @param thresholdVlaue
      * @param condition
      * @return
      */
-    public static boolean isAlarm(String value,String thresholdVlaue ,Integer condition){
+    public static boolean isAlarm(String value, String thresholdVlaue, String condition) {
+        switch (condition) {
+            case ">":
+                //如果包含点的话，说明是小数，否则按long处理
+                if (value.contains(".") || thresholdVlaue.contains(".")) {
+                    return Double.parseDouble(value) > Double.parseDouble(thresholdVlaue);
+                } else {
+                    return Long.parseLong(value) > Long.parseLong(thresholdVlaue);
+                }
+        }
+
 
         return false;
     }

@@ -50,6 +50,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<MessageProtocolIn
         System.out.println(messageProtocol.getContent());
 
         if(MessageTypeEnum.MONITORING_CONFIG.getId() == messageProtocol.getType() ){
+            System.out.println("收到服务端下发配置数据："+ messageProtocol.getContent());
             final List<MonitoringConfig> monitoringConfigs = JSON.parseArray(messageProtocol.getContent(), MonitoringConfig.class);
             MonitoringThreadManagment.startMonitoringThread(monitoringConfigs);
         }else{
