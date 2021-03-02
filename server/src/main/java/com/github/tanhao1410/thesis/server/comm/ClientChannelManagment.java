@@ -3,8 +3,10 @@ package com.github.tanhao1410.thesis.server.comm;
 import com.alibaba.fastjson.JSON;
 import com.github.tanhao1410.thesis.common.domain.AlarmDO;
 import com.github.tanhao1410.thesis.common.domain.DeviceDO;
+import com.github.tanhao1410.thesis.common.domain.HistoryAlarmDO;
 import com.github.tanhao1410.thesis.common.mapper.AlarmDOMapper;
 import com.github.tanhao1410.thesis.common.mapper.DeviceDOMapper;
+import com.github.tanhao1410.thesis.common.mapper.HistoryAlarmDOMapper;
 import com.github.tanhao1410.thesis.mq.MQConstant;
 import com.github.tanhao1410.thesis.mq.RedisService;
 import com.github.tanhao1410.thesis.mq.bean.AlarmChangeMsg;
@@ -33,6 +35,9 @@ public class ClientChannelManagment {
 
     @Resource
     private RedisService redisService;
+
+    @Resource
+    private HistoryAlarmDOMapper historyAlarmDOMapper;
 
     @Resource
     private AlarmDOMapper alarmDOMapper;
@@ -70,11 +75,25 @@ public class ClientChannelManagment {
             final List<AlarmDO> alarmDOS = alarmDOMapper.selectPageSelective(queryAlarmDo, new PageRequest(0, 1, null));
             //该设备在系统中的状态是在线 才会产生断线的告警
             if (alarmDOS != null && alarmDOS.size() > 0) {
+
                 AlarmDO alarm = alarmDOS.get(0);
+
+                //由不在线-->在线，需要记录历史记录
+                HistoryAlarmDO historyAlarmDO = new HistoryAlarmDO();
+                historyAlarmDO.setValue(alarm.getValue());
+                historyAlarmDO.setStartTime(alarm.getStartTime());
+                historyAlarmDO.setRuleId(alarm.getRuleId());
+                historyAlarmDO.setName(alarm.getName());
+                historyAlarmDO.setEndTime(new Date(System.currentTimeMillis()));
+                historyAlarmDO.setDeviceId(alarm.getDeviceId());
+
+                historyAlarmDOMapper.insert(historyAlarmDO);
+
                 alarm.setValue("在线");
                 alarm.setIsNormal(true);
                 alarm.setStartTime(new Date(System.currentTimeMillis()));
                 alarmDOMapper.updateByPrimaryKey(alarm);
+
                 //通知管理系统
                 AlarmChangeMsg alarmMsg = new AlarmChangeMsg();
                 alarmMsg.setDeviceId(alarm.getDeviceId());
