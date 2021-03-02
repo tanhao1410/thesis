@@ -1,7 +1,6 @@
 package com.github.tanhao1410.thesis.client.collect;
 
-import com.github.tanhao1410.thesis.client.collect.impl.CPUUsageCollectMethod;
-import com.github.tanhao1410.thesis.client.collect.impl.MemUsageCollectMethod;
+import com.github.tanhao1410.thesis.client.collect.impl.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,11 +40,17 @@ public abstract class AbstractCollectMethod {
     private static Map<String, AbstractCollectMethod> methods = new HashMap<>();
 
     static {
-        final CPUUsageCollectMethod cpuUsageCollectMethod = new CPUUsageCollectMethod();
-        final MemUsageCollectMethod memUsageCollectMethod = new MemUsageCollectMethod();
+        final AbstractCollectMethod cpuUsageCollectMethod = new CPUUsageCollectMethod();
+        final AbstractCollectMethod memUsageCollectMethod = new MemUsageCollectMethod();
+        final AbstractCollectMethod diskUsageCollectMethod = new DiskUsageCollectMethod();
+        final AbstractCollectMethod serviceMemUsageMonitoreMethod = new ServiceMemUsageMonitoreMethod();
+        final AbstractCollectMethod serviceStatusMonitoreMethod = new ServiceStatusMonitoreMethod();
 
         methods.put(cpuUsageCollectMethod.getName(), cpuUsageCollectMethod);
         methods.put(memUsageCollectMethod.getName(), memUsageCollectMethod);
+        methods.put(diskUsageCollectMethod.getName(), diskUsageCollectMethod);
+        methods.put(serviceMemUsageMonitoreMethod.getName(), serviceMemUsageMonitoreMethod);
+        methods.put(serviceStatusMonitoreMethod.getName(), serviceStatusMonitoreMethod);
     }
 
 }
