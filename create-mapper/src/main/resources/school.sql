@@ -11,7 +11,7 @@
  Target Server Version : 50130
  File Encoding         : 65001
 
- Date: 01/03/2021 14:18:09
+ Date: 02/03/2021 14:47:40
 */
 
 SET NAMES utf8mb4;
@@ -25,12 +25,12 @@ CREATE TABLE `alarm`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `device_id` bigint(20) NULL DEFAULT NULL,
-  `rule_id` bigint(20) NULL DEFAULT NULL,
+  `item_id` bigint(20) NULL DEFAULT NULL,
   `value` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `start_time` timestamp NULL DEFAULT NULL,
-  `status` int(11) NULL DEFAULT NULL,
+  `is_normal` tinyint(1) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for device
@@ -46,7 +46,7 @@ CREATE TABLE `device`  (
   `y` int(11) NULL DEFAULT NULL,
   `department` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for device_group
@@ -70,12 +70,12 @@ CREATE TABLE `history_alarm`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `device_id` bigint(20) NULL DEFAULT NULL,
-  `rule_id` bigint(20) NULL DEFAULT NULL,
+  `item_id` bigint(20) NULL DEFAULT NULL,
   `value` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `start_time` timestamp NULL DEFAULT NULL,
   `end_time` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 42 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for monitoring_data
@@ -85,11 +85,11 @@ CREATE TABLE `monitoring_data`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `device_id` bigint(20) NULL DEFAULT NULL,
-  `rule_id` bigint(20) NULL DEFAULT NULL,
+  `item_id` bigint(20) NULL DEFAULT NULL,
   `value` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `start_time` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 53 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for monitoring_item
@@ -97,17 +97,19 @@ CREATE TABLE `monitoring_data`  (
 DROP TABLE IF EXISTS `monitoring_item`;
 CREATE TABLE `monitoring_item`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `item_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `device_id` bigint(20) NULL DEFAULT NULL,
-  `monitoring_id` bigint(20) NULL DEFAULT NULL,
+  `rule_id` bigint(20) NULL DEFAULT NULL,
+  `monitoring_method` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `threshold` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `param` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `alarm_condition` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `level` int(4) NULL DEFAULT NULL,
-  `interval` int(8) NULL DEFAULT NULL,
+  `interval_time` int(8) NULL DEFAULT NULL,
   `need_mail` tinyint(1) NULL DEFAULT NULL,
   `is_alarm` tinyint(1) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for monitoring_rule
@@ -119,7 +121,7 @@ CREATE TABLE `monitoring_rule`  (
   `method` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `description` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for user
