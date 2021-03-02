@@ -1,6 +1,6 @@
 var ws;
 function webSocketInit(){
-    ws = new WebSocket("ws://localhost:8080/websocket");
+    ws = new WebSocket("ws://localhost:8887/websocket");
     ws.onopen = function(evn){
     };
 

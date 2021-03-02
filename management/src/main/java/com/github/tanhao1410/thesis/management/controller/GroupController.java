@@ -3,8 +3,10 @@ package com.github.tanhao1410.thesis.management.controller;
 import com.alibaba.fastjson.JSONObject;
 
 import com.github.tanhao1410.thesis.common.bean.ActionResult;
+import com.github.tanhao1410.thesis.common.bean.UserBean;
 import com.github.tanhao1410.thesis.common.domain.GroupDO;
 import com.github.tanhao1410.thesis.management.service.GroupService;
+import com.github.tanhao1410.thesis.user.interceptor.LoginContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,21 +36,21 @@ class GroupController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
     }
 
-    @RequestMapping(value = "/{groupId}", method = RequestMethod.GET)
-    public ResponseEntity getNetworkById(@PathVariable("groupId") String networkId) {
-        ActionResult result = new ActionResult();
-        try {
-            GroupDO network = groupService.getNetworkById(networkId);
-            if (null == network ) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-            }
-            return ResponseEntity.ok(network);
-        } catch (Exception e) {
-            result.setMsg(e.toString());
-            e.printStackTrace();
-        }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-    }
+//    @RequestMapping(value = "/{groupId}", method = RequestMethod.GET)
+//    public ResponseEntity getNetworkById(@PathVariable("groupId") String networkId) {
+//        ActionResult result = new ActionResult();
+//        try {
+//            GroupDO network = groupService.getNetworkById(networkId);
+//            if (null == network ) {
+//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+//            }
+//            return ResponseEntity.ok(network);
+//        } catch (Exception e) {
+//            result.setMsg(e.toString());
+//            e.printStackTrace();
+//        }
+//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+//    }
 
     /**
      * 创建设备组
@@ -77,7 +79,7 @@ class GroupController {
      */
     @ResponseBody
     @RequestMapping( "/delete")
-    public ResponseEntity deleteNode(@RequestParam("id") String id) {
+    public ResponseEntity deleteNode(@RequestParam("id") Long id) {
 
         ActionResult result = new ActionResult();
         try {
@@ -95,11 +97,11 @@ class GroupController {
      */
     @ResponseBody
     @RequestMapping( method = RequestMethod.GET)
-    public ResponseEntity getAllNetwork() {
+    public ResponseEntity getAllNetwork(UserBean user) {
 
         ActionResult result = new ActionResult();
         try {
-            List<GroupDO> list = groupService.getAllNetwork();
+            List<GroupDO> list = groupService.getAllNetwork(user);
             return ResponseEntity.status(HttpStatus.OK).body(list);
         } catch (Exception e) {
             result.setMsg(e.toString());

@@ -6,9 +6,15 @@ import com.github.tanhao1410.thesis.common.domain.DeviceDO;
 import java.util.List;
 import java.util.Set;
 
-public interface NodeService {
+public interface DeviceService {
 
-    List<DeviceDO> getAllNetwork(String networkId) throws Exception;
+    /**
+     * 获取设备组下面的所有设备
+     * @param networkId
+     * @return
+     * @throws Exception
+     */
+    List<DeviceDO> getAllDevice(Long networkId) throws Exception;
 
     DeviceDO createNode(DeviceDO node) throws Exception;
 

@@ -28,7 +28,7 @@ public class AlarmController {
      */
     @ResponseBody
     @RequestMapping( method = RequestMethod.GET)
-    public ResponseEntity getAllNetwork(@RequestParam("networkId") String networkId) {
+    public ResponseEntity getAllNetwork(@RequestParam("networkId") Long networkId) {
 
         ActionResult result = new ActionResult();
         try {

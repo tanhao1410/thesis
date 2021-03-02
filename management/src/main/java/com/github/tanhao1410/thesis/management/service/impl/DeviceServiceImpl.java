@@ -2,30 +2,30 @@ package com.github.tanhao1410.thesis.management.service.impl;
 
 import com.github.tanhao1410.thesis.common.domain.DeviceDO;
 import com.github.tanhao1410.thesis.common.mapper.DeviceDOMapper;
-import com.github.tanhao1410.thesis.management.service.NodeService;
+import com.github.tanhao1410.thesis.management.service.DeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
 
 @Service
-public class NodeServiceImpl implements NodeService {
+public class DeviceServiceImpl implements DeviceService {
 
     @Autowired
-    private DeviceDOMapper nodeMapper;
-
-
+    private DeviceDOMapper deviceDOMapper;
 
     @Override
     public void deleteNodeById(String id) throws Exception {
 
 
     }
-
     @Override
-    public List<DeviceDO> getAllNetwork(String networkId) throws Exception {
-        return null;
+    public List<DeviceDO> getAllDevice(Long groupId) throws Exception {
+        DeviceDO queryDo = new DeviceDO();
+        queryDo.setGroupId(groupId);
+        return deviceDOMapper.selectPageSelective(queryDo,new PageRequest(0,Integer.MAX_VALUE,null));
     }
 
     @Override

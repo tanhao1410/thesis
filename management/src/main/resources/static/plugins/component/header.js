@@ -1,7 +1,7 @@
 Vue.component('main-header', {
     template: ` <div class="bd-maintain-header" >
     <div class="header-left" >
-    <slot name="title">工资文件收集&汇总</slot>
+    <slot name="title">服务器设备监控管理系统</slot>
     </div>
     <div class="header-right">            
         <el-menu 
@@ -26,7 +26,7 @@ Vue.component('main-header', {
         }
     },
     mounted() {
-        this.getUserInfo();
+        //this.getUserInfo();
     },
     methods: {
         // 获取用户详情

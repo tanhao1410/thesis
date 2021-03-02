@@ -2,8 +2,10 @@ package com.github.tanhao1410.thesis.management.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.github.tanhao1410.thesis.common.bean.ActionResult;
+import com.github.tanhao1410.thesis.common.bean.UserBean;
 import com.github.tanhao1410.thesis.common.domain.DeviceDO;
-import com.github.tanhao1410.thesis.management.service.NodeService;
+import com.github.tanhao1410.thesis.management.service.DeviceService;
+import com.github.tanhao1410.thesis.user.interceptor.LoginContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,12 +14,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping("/node")
+@RequestMapping("/device")
 @Controller
 class DeviceController {
 
     @Autowired
-    NodeService nodeService;
+    DeviceService deviceService;
 
 
     /**
@@ -25,11 +27,11 @@ class DeviceController {
      */
     @ResponseBody
     @RequestMapping( method = RequestMethod.GET)
-    public ResponseEntity getAllNetwork(@RequestParam("networkId") String networkId) {
+    public ResponseEntity getAllNetwork(@RequestParam("groupId") Long groupId) {
 
         ActionResult result = new ActionResult();
         try {
-            List<DeviceDO> list = nodeService.getAllNetwork(networkId);
+            List<DeviceDO> list = deviceService.getAllDevice(groupId);
             return ResponseEntity.status(HttpStatus.OK).body(list);
         } catch (Exception e) {
             result.setMsg(e.toString());
@@ -47,7 +49,7 @@ class DeviceController {
 
         ActionResult result = new ActionResult();
         try {
-            nodeService.deleteNodeById(id);
+            deviceService.deleteNodeById(id);
             return ResponseEntity.status(HttpStatus.OK).body(null);
         } catch (Exception e) {
             result.setMsg(e.toString());
@@ -66,7 +68,7 @@ class DeviceController {
         DeviceDO node = JSONObject.parseObject(json,DeviceDO.class);
         ActionResult result = new ActionResult();
         try {
-            DeviceDO node1 = nodeService.createNode(node);
+            DeviceDO node1 = deviceService.createNode(node);
             return ResponseEntity.status(HttpStatus.OK).body(node1);
         } catch (Exception e) {
             result.setMsg(e.toString());

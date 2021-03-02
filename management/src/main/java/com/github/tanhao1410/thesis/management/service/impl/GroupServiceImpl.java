@@ -2,7 +2,9 @@ package com.github.tanhao1410.thesis.management.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.github.tanhao1410.thesis.common.bean.UserBean;
 import com.github.tanhao1410.thesis.common.domain.GroupDO;
+import com.github.tanhao1410.thesis.common.mapper.ExtGroupDOMapper;
 import com.github.tanhao1410.thesis.common.mapper.GroupDOMapper;
 import com.github.tanhao1410.thesis.management.service.GroupService;
 import com.github.tanhao1410.thesis.mq.MQConstant;
@@ -26,6 +28,10 @@ public class GroupServiceImpl implements GroupService {
     @Autowired
     private RedisService redisService;
 
+
+    @Resource
+    private ExtGroupDOMapper extGroupDOMapper;
+
     @Override
     public GroupDO getNetworkById(String networkId) throws Exception {
         return null;
@@ -39,23 +45,10 @@ public class GroupServiceImpl implements GroupService {
         return network;
     }
 
-    @Override
-    public void updateNetwork(GroupDO network) throws Exception {
-
-    }
 
     @Override
-    public List<GroupDO> getAllNetwork() throws Exception {
-        GroupDO queryDo = new GroupDO();
-
-        //测试 redis消息队列
-        redisService.pubMessage(MQConstant.DEVICE_CHANGE_MESSAGE_NAME,"test");
-
-        //queryDo.setId(1L);
-        queryDo.setX(30);
-        ArrayList<GroupDO> res = new ArrayList();
-        res.add(groupDOMapper.selectByPrimaryKey(1L));
-        return res;
+    public List<GroupDO> getAllNetwork(UserBean userBean) throws Exception {
+        return extGroupDOMapper.selectAll();
     }
 
     @Override
@@ -73,7 +66,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public void deleteNetworkById(String id) throws Exception {
+    public void deleteNetworkById(Long id) throws Exception {
 
     }
 }
