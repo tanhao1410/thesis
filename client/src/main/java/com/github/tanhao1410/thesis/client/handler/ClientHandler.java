@@ -2,6 +2,7 @@ package com.github.tanhao1410.thesis.client.handler;
 
 import com.alibaba.fastjson.JSON;
 import com.github.tanhao1410.thesis.client.comm.ClientChannelManagement;
+import com.github.tanhao1410.thesis.client.netty.NettyClient;
 import com.github.tanhao1410.thesis.client.task.MonitoringThreadManagment;
 import com.github.tanhao1410.thesis.client.utils.SystemInfoUtils;
 import com.github.tanhao1410.thesis.protocol.MessageProtocolInfo;
@@ -11,10 +12,51 @@ import com.github.tanhao1410.thesis.protocol.bean.ClientInfo;
 import com.github.tanhao1410.thesis.protocol.bean.MonitoringConfig;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.timeout.IdleStateEvent;
 
+import java.net.InetSocketAddress;
 import java.util.List;
 
 public class ClientHandler extends SimpleChannelInboundHandler<MessageProtocolInfo.MessageProtocol> {
+
+
+    private NettyClient client;
+
+    public ClientHandler(NettyClient client){
+        this.client = client;
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        //System.out.println("断开连接。。。。");
+        client.run();
+        //断线重连
+        super.channelInactive(ctx);
+    }
+
+    @Override
+    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+
+        if (evt instanceof IdleStateEvent) {
+            IdleStateEvent e = (IdleStateEvent) evt;
+            switch (e.state()) {
+                case ALL_IDLE:
+                    final MessageProtocolInfo.MessageProtocol configMsg = MessageProtocolInfo.MessageProtocol.newBuilder()
+                            .setHead(TCPProtocolConstant.HEAD)
+                            .setContent("")
+                            .setLen(0)
+                            .setType(MessageTypeEnum.PING.getId())
+                            .build();
+                    ctx.writeAndFlush(configMsg);
+                    //客户端信息上传
+                    System.out.println("客户端发送ping消息");
+                    break;
+                default:
+                    break;
+            }
+        }
+        super.userEventTriggered(ctx, evt);
+    }
 
     //当通道就绪就会触发该方法
     @Override
@@ -47,14 +89,12 @@ public class ClientHandler extends SimpleChannelInboundHandler<MessageProtocolIn
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, MessageProtocolInfo.MessageProtocol messageProtocol) throws Exception {
         //根据dataType 来显示不同的信息
-        System.out.println(messageProtocol.getContent());
-
         if(MessageTypeEnum.MONITORING_CONFIG.getId() == messageProtocol.getType() ){
             System.out.println("收到服务端下发配置数据："+ messageProtocol.getContent());
             final List<MonitoringConfig> monitoringConfigs = JSON.parseArray(messageProtocol.getContent(), MonitoringConfig.class);
             MonitoringThreadManagment.startMonitoringThread(monitoringConfigs);
-        }else{
-            System.out.println("服务端下发了错误信息");
+        }else if(MessageTypeEnum.PONG.getId() == messageProtocol.getType() ){
+            System.out.println("服务端回复pong");
         }
     }
 

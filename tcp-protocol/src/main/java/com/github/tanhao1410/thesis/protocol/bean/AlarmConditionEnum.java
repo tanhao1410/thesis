@@ -47,6 +47,35 @@ public enum AlarmConditionEnum {
                 } else {
                     return Long.parseLong(value) > Long.parseLong(thresholdVlaue);
                 }
+            case "<":
+                if (value.contains(".") || thresholdVlaue.contains(".")) {
+                    return Double.parseDouble(value) < Double.parseDouble(thresholdVlaue);
+                } else {
+                    return Long.parseLong(value) < Long.parseLong(thresholdVlaue);
+                }
+            case ">=":
+                //如果包含点的话，说明是小数，否则按long处理
+                if (value.contains(".") || thresholdVlaue.contains(".")) {
+                    return Double.parseDouble(value) >= Double.parseDouble(thresholdVlaue);
+                } else {
+                    return Long.parseLong(value) >= Long.parseLong(thresholdVlaue);
+                }
+            case "<=":
+                if (value.contains(".") || thresholdVlaue.contains(".")) {
+                    return Double.parseDouble(value) <= Double.parseDouble(thresholdVlaue);
+                } else {
+                    return Long.parseLong(value) <= Long.parseLong(thresholdVlaue);
+                }
+            case "==":
+                //如果包含点的话，说明是小数，否则按long处理
+                return value.equals(thresholdVlaue);
+            case "!=":
+                return !value.equals(thresholdVlaue);
+            case "包含":
+                //如果包含点的话，说明是小数，否则按long处理
+                return value.contains(thresholdVlaue);
+            case "不包含":
+                return !value.contains(thresholdVlaue);
         }
 
 

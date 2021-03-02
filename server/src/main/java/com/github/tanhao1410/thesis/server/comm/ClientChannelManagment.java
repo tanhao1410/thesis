@@ -71,6 +71,7 @@ public class ClientChannelManagment {
             //该设备在系统中的状态是在线 才会产生断线的告警
             if (alarmDOS != null && alarmDOS.size() > 0) {
                 AlarmDO alarm = alarmDOS.get(0);
+                alarm.setValue("在线");
                 alarm.setIsNormal(true);
                 alarm.setStartTime(new Date(System.currentTimeMillis()));
                 alarmDOMapper.updateByPrimaryKey(alarm);
@@ -138,6 +139,7 @@ public class ClientChannelManagment {
             if (alarmDOS != null && alarmDOS.size() > 0) {
                 AlarmDO alarm = alarmDOS.get(0);
                 alarm.setIsNormal(false);
+                alarm.setValue("断线");
                 alarm.setStartTime(new Date(System.currentTimeMillis()));
                 alarmDOMapper.updateByPrimaryKey(alarm);
                 //通知管理系统

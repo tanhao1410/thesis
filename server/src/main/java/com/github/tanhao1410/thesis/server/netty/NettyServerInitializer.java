@@ -7,6 +7,7 @@ import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.protobuf.ProtobufDecoder;
 import io.netty.handler.codec.protobuf.ProtobufEncoder;
+import io.netty.handler.timeout.IdleStateHandler;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,6 +27,7 @@ public class NettyServerInitializer extends ChannelInitializer<SocketChannel> {
         //传输的协议 Protobuf
         //ph.addLast(new MyMessageDecoder());//解码器
         //ph.addLast(new MyMessageEncoder());//编码器
+        ph.addLast(new IdleStateHandler(0, 0, 60));
 
         ph.addLast("decoder", new ProtobufDecoder(MessageProtocolInfo.MessageProtocol.getDefaultInstance()));
         ph.addLast("encoder", new ProtobufEncoder());

@@ -86,8 +86,9 @@ public class DeviceMsgListener extends MessageListenerAdapter {
                     AlarmDO record = new AlarmDO();
                     record.setDeviceId(msgObj.getId());
                     record.setRuleId(1L);
+                    record.setName("在线状态");
                     record.setStartTime(new Date(System.currentTimeMillis()));
-                    record.setValue("0");
+                    record.setValue("断线");
                     record.setIsNormal(false);
                     //alarmDOMapper.insert(record);
                     final Long alarmId = alarmDOMapper.insertSelectiveReturnPrimaryKey(record);
@@ -102,7 +103,8 @@ public class DeviceMsgListener extends MessageListenerAdapter {
                     record.setDeviceId(msgObj.getId());
                     record.setRuleId(1L);
                     record.setStartTime(new Date(System.currentTimeMillis()));
-                    record.setValue("0");
+                    record.setValue("在线");
+                    record.setName("在线状态");
                     record.setIsNormal(true);
                     //alarmDOMapper.insert(record);
                     final Long alarmId = alarmDOMapper.insertSelectiveReturnPrimaryKey(record);

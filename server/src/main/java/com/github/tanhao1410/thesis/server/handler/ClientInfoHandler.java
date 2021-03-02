@@ -13,27 +13,22 @@ import com.github.tanhao1410.thesis.mq.MQConstant;
 import com.github.tanhao1410.thesis.mq.RedisService;
 import com.github.tanhao1410.thesis.protocol.MessageProtocolInfo;
 import com.github.tanhao1410.thesis.protocol.MessageTypeEnum;
-import com.github.tanhao1410.thesis.protocol.TCPProtocolConstant;
 import com.github.tanhao1410.thesis.protocol.bean.ClientInfo;
 import com.github.tanhao1410.thesis.protocol.bean.MonitoringAlarm;
 import com.github.tanhao1410.thesis.protocol.bean.MonitoringData;
 import com.github.tanhao1410.thesis.server.spring.SpringBeanManagement;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.handler.timeout.IdleStateEvent;
 import org.springframework.data.domain.PageRequest;
 
 import java.net.InetSocketAddress;
 import java.util.Date;
 import java.util.List;
 
-/*
-说明
-1. 我们自定义一个Handler 需要继续netty 规定好的某个HandlerAdapter(规范)
-2. 这时我们自定义一个Handler , 才能称为一个handler
+/**
+ * 处理客户端信息上报信息
  */
-
-public class ServerHandler extends SimpleChannelInboundHandler<MessageProtocolInfo.MessageProtocol> {
+public class ClientInfoHandler extends SimpleChannelInboundHandler<MessageProtocolInfo.MessageProtocol> {
 
     //处理异常, 一般是需要关闭通道
 
@@ -50,21 +45,6 @@ public class ServerHandler extends SimpleChannelInboundHandler<MessageProtocolIn
 
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-
-        if (evt instanceof IdleStateEvent) {
-            IdleStateEvent e = (IdleStateEvent) evt;
-            switch (e.state()) {
-                case ALL_IDLE:
-                    final InetSocketAddress socketAddress = (InetSocketAddress) ctx.channel().remoteAddress();
-                    String ip = socketAddress.getAddress().getHostAddress();
-                    int port = socketAddress.getPort();
-                    //客户端信息上传
-                    System.out.println("客户端信息上传ip :" + ip + " port : " + port + " 长时间未有读写请求");
-                    break;
-                default:
-                    break;
-            }
-        }
         super.userEventTriggered(ctx, evt);
     }
 
@@ -180,23 +160,6 @@ public class ServerHandler extends SimpleChannelInboundHandler<MessageProtocolIn
             dataDO.setValue(monitoringData.getValue());
             //存入数据库
             monitoringDataDOMapper.insert(dataDO);
-        } else if(msg.getType() == MessageTypeEnum.PING.getId()){
-
-            //得到client的ip 和端口号
-            final InetSocketAddress socketAddress = (InetSocketAddress) ctx.channel().remoteAddress();
-            String ip = socketAddress.getAddress().getHostAddress();
-            int port = socketAddress.getPort();
-            //客户端信息上传
-            System.out.println("客户端ip :" + ip + " port : " + port + " 发送ping消息");
-
-            //回复pong
-            final MessageProtocolInfo.MessageProtocol configMsg = MessageProtocolInfo.MessageProtocol.newBuilder()
-                    .setHead(TCPProtocolConstant.HEAD)
-                    .setContent("")
-                    .setLen(0)
-                    .setType(MessageTypeEnum.PONG.getId())
-                    .build();
-            ctx.writeAndFlush(configMsg);
         }
     }
 }
