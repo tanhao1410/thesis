@@ -69,36 +69,46 @@ public class ClientChannelManagment {
         if (deviceDOS != null && deviceDOS.size() > 0) {
             //当客户端移除时，需要产生一个断线的告警
             AlarmDO queryAlarmDo = new AlarmDO();
-            queryAlarmDo.setRuleId(1L);
+            queryAlarmDo.setItemId(0l);
             queryAlarmDo.setDeviceId(deviceDOS.get(0).getId());
-            queryAlarmDo.setIsNormal(false);
             final List<AlarmDO> alarmDOS = alarmDOMapper.selectPageSelective(queryAlarmDo, new PageRequest(0, 1, null));
             //该设备在系统中的状态是在线 才会产生断线的告警
             if (alarmDOS != null && alarmDOS.size() > 0) {
 
                 AlarmDO alarm = alarmDOS.get(0);
 
-                //由不在线-->在线，需要记录历史记录
-                HistoryAlarmDO historyAlarmDO = new HistoryAlarmDO();
-                historyAlarmDO.setValue(alarm.getValue());
-                historyAlarmDO.setStartTime(alarm.getStartTime());
-                historyAlarmDO.setRuleId(alarm.getRuleId());
-                historyAlarmDO.setName(alarm.getName());
-                historyAlarmDO.setEndTime(new Date(System.currentTimeMillis()));
-                historyAlarmDO.setDeviceId(alarm.getDeviceId());
+                //原来的是断线，现在在线了
+                if(!alarm.getIsNormal()){
+                    //由不在线-->在线，需要记录历史记录
+                    HistoryAlarmDO historyAlarmDO = new HistoryAlarmDO();
+                    historyAlarmDO.setValue(alarm.getValue());
+                    historyAlarmDO.setStartTime(alarm.getStartTime());
+                    historyAlarmDO.setItemId(alarm.getItemId());
+                    historyAlarmDO.setName(alarm.getName());
+                    historyAlarmDO.setEndTime(new Date(System.currentTimeMillis()));
+                    historyAlarmDO.setDeviceId(alarm.getDeviceId());
 
-                historyAlarmDOMapper.insert(historyAlarmDO);
+                    historyAlarmDOMapper.insert(historyAlarmDO);
 
-                alarm.setValue("在线");
-                alarm.setIsNormal(true);
-                alarm.setStartTime(new Date(System.currentTimeMillis()));
-                alarmDOMapper.updateByPrimaryKey(alarm);
+                    alarm.setValue("在线");
+                    alarm.setIsNormal(true);
+                    alarm.setStartTime(new Date(System.currentTimeMillis()));
+                    alarmDOMapper.updateByPrimaryKey(alarm);
 
-                //通知管理系统
-                AlarmChangeMsg alarmMsg = new AlarmChangeMsg();
-                alarmMsg.setDeviceId(alarm.getDeviceId());
-                alarmMsg.setAlarmId(alarm.getId());
-                redisService.pubMessage(MQConstant.ALARM_CHANGE_MESSAGE_NAME, JSON.toJSONString(alarmMsg));
+                    //通知管理系统
+                    AlarmChangeMsg alarmMsg = new AlarmChangeMsg();
+                    alarmMsg.setDeviceId(alarm.getDeviceId());
+                    alarmMsg.setAlarmId(alarm.getId());
+                    redisService.pubMessage(MQConstant.ALARM_CHANGE_MESSAGE_NAME, JSON.toJSONString(alarmMsg));
+                }
+            }else{
+                //系统中不存在这个告警
+                queryAlarmDo.setIsNormal(true);
+                queryAlarmDo.setValue("在线");
+                queryAlarmDo.setStartTime(new Date(System.currentTimeMillis()));
+                queryAlarmDo.setName("在线状态");
+
+                alarmDOMapper.insert(queryAlarmDo);
             }
         }
 
@@ -150,22 +160,30 @@ public class ClientChannelManagment {
         if (deviceDOS != null && deviceDOS.size() > 0) {
             //当客户端移除时，需要产生一个断线的告警
             AlarmDO queryAlarmDo = new AlarmDO();
-            queryAlarmDo.setRuleId(1L);
+            queryAlarmDo.setItemId(0L);
             queryAlarmDo.setDeviceId(deviceDOS.get(0).getId());
-            queryAlarmDo.setIsNormal(true);
             final List<AlarmDO> alarmDOS = alarmDOMapper.selectPageSelective(queryAlarmDo, new PageRequest(0, 1, null));
             //该设备在系统中的状态是在线 才会产生断线的告警
             if (alarmDOS != null && alarmDOS.size() > 0) {
                 AlarmDO alarm = alarmDOS.get(0);
-                alarm.setIsNormal(false);
-                alarm.setValue("断线");
-                alarm.setStartTime(new Date(System.currentTimeMillis()));
-                alarmDOMapper.updateByPrimaryKey(alarm);
-                //通知管理系统
-                AlarmChangeMsg alarmMsg = new AlarmChangeMsg();
-                alarmMsg.setDeviceId(alarm.getDeviceId());
-                alarmMsg.setAlarmId(alarm.getId());
-                redisService.pubMessage(MQConstant.ALARM_CHANGE_MESSAGE_NAME, JSON.toJSONString(alarmMsg));
+                if(alarm.getIsNormal()){
+                    alarm.setIsNormal(false);
+                    alarm.setValue("断线");
+                    alarm.setStartTime(new Date(System.currentTimeMillis()));
+                    alarmDOMapper.updateByPrimaryKey(alarm);
+                    //通知管理系统
+                    AlarmChangeMsg alarmMsg = new AlarmChangeMsg();
+                    alarmMsg.setDeviceId(alarm.getDeviceId());
+                    alarmMsg.setAlarmId(alarm.getId());
+                    redisService.pubMessage(MQConstant.ALARM_CHANGE_MESSAGE_NAME, JSON.toJSONString(alarmMsg));
+                }
+            }else{
+                //系统中不存在这个告警
+                queryAlarmDo.setIsNormal(false);
+                queryAlarmDo.setValue("断线");
+                queryAlarmDo.setStartTime(new Date(System.currentTimeMillis()));
+                queryAlarmDo.setName("在线状态");
+                alarmDOMapper.insert(queryAlarmDo);
             }
         }
     }

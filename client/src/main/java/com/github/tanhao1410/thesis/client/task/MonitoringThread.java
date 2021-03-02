@@ -70,15 +70,18 @@ public class MonitoringThread extends Thread {
                 alarmInfo.setTime(System.currentTimeMillis());
                 alarmInfo.setValue(value);
                 alarmInfo.setDeviceId(config.getDeviceId());
-                alarmInfo.setName(method.getName());
-                alarmInfo.setRuleId(config.getRuleId());
+                alarmInfo.setName(config.getItemName());
+                alarmInfo.setItemId(config.getItemId());
 
-                final boolean status = AlarmConditionEnum.isAlarm(value, config.getThreshold(), config.getAlarmCondition());
+                final boolean status = !AlarmConditionEnum.isAlarm(value, config.getThreshold(), config.getAlarmCondition());
                 alarmInfo.setIsNormal(status);
 
                 if(preStatus != null && preStatus.equals(status)){
                     continue;
                 }
+
+                //记录本次状态
+                preStatus = status;
 
                 final String alarmInfoStr = JSON.toJSONString(alarmInfo);
                 //组件告警
@@ -98,8 +101,8 @@ public class MonitoringThread extends Thread {
                 //直接传递给服务端结果即可。
                 MonitoringData monitoringData = new MonitoringData();
 
-                monitoringData.setName(config.getMonitoringMethod());
-                monitoringData.setRuleId(config.getRuleId());
+                monitoringData.setName(config.getItemName());
+                monitoringData.setItemId(config.getItemId());
                 monitoringData.setTime(System.currentTimeMillis());
                 monitoringData.setValue(method.getValue(config.getParam()));
                 monitoringData.setDeviceId(config.getDeviceId());
@@ -123,6 +126,7 @@ public class MonitoringThread extends Thread {
 
             //线程需要等待的时间
             long needSleepTime = config.getInterval() * 1000 - (endTime - startTime);
+
             if (needSleepTime > 0) {
                 try {
                     Thread.sleep(needSleepTime);

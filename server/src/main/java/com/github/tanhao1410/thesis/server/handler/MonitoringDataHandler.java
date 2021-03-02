@@ -40,7 +40,7 @@ public class MonitoringDataHandler extends SimpleChannelInboundHandler<MessagePr
             MonitoringDataDO dataDO = new MonitoringDataDO();
             dataDO.setDeviceId(monitoringData.getDeviceId());
             dataDO.setName(monitoringData.getName());
-            dataDO.setRuleId(monitoringData.getRuleId());
+            dataDO.setItemId(monitoringData.getItemId());
             dataDO.setStartTime(new Date(monitoringData.getTime()));
             dataDO.setValue(monitoringData.getValue());
             //存入数据库

@@ -85,7 +85,7 @@ public class DeviceMsgListener extends MessageListenerAdapter {
                     //说明客户端未在线，生成一个不在线的告警返回。
                     AlarmDO record = new AlarmDO();
                     record.setDeviceId(msgObj.getId());
-                    record.setRuleId(1L);
+                    record.setItemId(1L);
                     record.setName("在线状态");
                     record.setStartTime(new Date(System.currentTimeMillis()));
                     record.setValue("断线");
@@ -101,7 +101,7 @@ public class DeviceMsgListener extends MessageListenerAdapter {
                     //说明客户端未在线，生成一个不在线的告警返回。
                     AlarmDO record = new AlarmDO();
                     record.setDeviceId(msgObj.getId());
-                    record.setRuleId(1L);
+                    record.setItemId(0l);
                     record.setStartTime(new Date(System.currentTimeMillis()));
                     record.setValue("在线");
                     record.setName("在线状态");

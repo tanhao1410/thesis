@@ -54,7 +54,7 @@ public class NettyClient {
             protected void initChannel(SocketChannel socketChannel) throws Exception {
                 ChannelPipeline ph = socketChannel.pipeline();
 
-                ph.addLast(new IdleStateHandler(0, 0, 10));
+                ph.addLast(new IdleStateHandler(0, 0, 60));
 
                 ph.addLast("decoder", new ProtobufDecoder(MessageProtocolInfo.MessageProtocol.getDefaultInstance()));
                 ph.addLast("encoder", new ProtobufEncoder());
@@ -83,14 +83,14 @@ public class NettyClient {
                     }
                 });
                 if (initFalg) {
-                    System.out.println("Netty客户端启动成功!");
+                    System.out.println("信息采集客户端启动成功!");
                     initFalg = false;
                 }
                 // 阻塞
                 f.channel().closeFuture().sync();
             }
         } catch (Exception e) {
-            System.out.println("客户端连接失败!" + e.getMessage());
+            System.out.println("信息采集客户端连接失败!" + e.getMessage());
         }
 
     }

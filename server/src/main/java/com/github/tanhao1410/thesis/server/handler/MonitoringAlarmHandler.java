@@ -45,6 +45,7 @@ public class MonitoringAlarmHandler extends SimpleChannelInboundHandler<MessageP
 
             AlarmDO queryDo = new AlarmDO();
             queryDo.setDeviceId(monitoringAlarm.getDeviceId());
+            queryDo.setItemId(monitoringAlarm.getItemId());
             final List<AlarmDO> alarmDOS = alarmDOMapper.selectPageSelective(queryDo, new PageRequest(0, 1, null));
             if (alarmDOS != null && alarmDOS.size() > 0) {
                 //查询是否和当前告警是否发生，如果已经发生，则跳过
@@ -57,7 +58,8 @@ public class MonitoringAlarmHandler extends SimpleChannelInboundHandler<MessageP
                         historyAlarmDO.setDeviceId(alarmDO.getDeviceId());
                         historyAlarmDO.setEndTime(new Date(System.currentTimeMillis()));
                         historyAlarmDO.setName(alarmDO.getName());
-                        historyAlarmDO.setRuleId(alarmDO.getRuleId());
+                        //historyAlarmDO.setRuleId(alarmDO.getRuleId());
+                        historyAlarmDO.setItemId(alarmDO.getItemId());
                         historyAlarmDO.setStartTime(alarmDO.getStartTime());
                         historyAlarmDO.setValue(alarmDO.getValue());
 
@@ -78,6 +80,15 @@ public class MonitoringAlarmHandler extends SimpleChannelInboundHandler<MessageP
                         alarmDOMapper.updateByPrimaryKey(alarmDO);
                     }
                 }
+            }else{
+                //当前告警不存在，应该新建一个当前告警消息
+                queryDo.setName(monitoringAlarm.getName());
+                queryDo.setStartTime(new Date(System.currentTimeMillis()));
+                queryDo.setIsNormal(monitoringAlarm.getIsNormal());
+                queryDo.setValue(monitoringAlarm.getValue());
+                queryDo.setItemId(monitoringAlarm.getItemId());
+
+                alarmDOMapper.insert(queryDo);
             }
         }
         ctx.fireChannelRead(msg);

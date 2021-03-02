@@ -3,6 +3,7 @@ package com.github.tanhao1410.thesis.server.service.impl;
 import com.github.tanhao1410.thesis.common.domain.MonitoringItemDO;
 import com.github.tanhao1410.thesis.common.mapper.MonitoringItemDOMapper;
 import com.github.tanhao1410.thesis.common.mapper.MonitoringRuleDOMapper;
+import com.github.tanhao1410.thesis.protocol.MessageTypeEnum;
 import com.github.tanhao1410.thesis.protocol.bean.MonitoringConfig;
 import com.github.tanhao1410.thesis.server.service.MonitoringConfigService;
 import org.springframework.data.domain.PageRequest;
@@ -42,10 +43,18 @@ public class MonitoringConfigServiceImpl implements MonitoringConfigService {
             config.setParam(e.getParam());
             //config.setRuleId(e.get);
             config.setThreshold(e.getThreshold());
-            config.setType(e.getIsAlarm()?0:3);
-            config.setRuleId(e.getRuleId());
+
+            //config.setType(e.getIsAlarm()== null || !e.getIsAlarm() ?0:3);
+            if(e.getIsAlarm() == null || !e.getIsAlarm()){
+                config.setType(MessageTypeEnum.MONITORING_DATA.getId());
+            }else{
+                config.setType(MessageTypeEnum.MONITORING_ALARM.getId());
+            }
+
             config.setMonitoringMethod(e.getMonitoringMethod());
             config.setDeviceId(e.getDeviceId());
+            config.setItemId(e.getId());
+            config.setItemName(e.getItemName());
             return config;
         }).collect(Collectors.toList());
         return configs;

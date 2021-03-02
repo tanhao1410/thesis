@@ -21,13 +21,19 @@ public class MonitoringAlarm {
      */
     private String value;
 
-    private Long ruleId;
-
+    /**
+     * 监控项名称
+     */
     private String name;
 
     private Long deviceId;
 
     //false的情况下，说明是发生了告警，true说明，是正常的状态。
     private Boolean isNormal;
+
+    /**
+     * 监控项id
+     */
+    private Long itemId;
 
 }

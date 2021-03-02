@@ -24,7 +24,6 @@ public class MonitoringConfig implements Serializable {
      */
     private Integer interval;
 
-    private Long ruleId;
 
     private Long deviceId;
 
@@ -51,4 +50,14 @@ public class MonitoringConfig implements Serializable {
      * 类型，是性能监控还是数据监控
      */
     private Integer type;
+
+    /**
+     * 监控项id
+     */
+    private Long itemId;
+
+    /**
+     * 监控项名称
+     */
+    private String itemName;
 }

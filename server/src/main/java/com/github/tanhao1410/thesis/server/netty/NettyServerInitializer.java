@@ -26,7 +26,7 @@ public class NettyServerInitializer extends ChannelInitializer<SocketChannel> {
 
         //入参说明: 读超时时间、写超时时间、所有类型的超时时间、时间格式
 
-        ph.addLast(new IdleStateHandler(0, 0, 60));
+        ph.addLast(new IdleStateHandler(0, 0, 180));
 
         ph.addLast("decoder", new ProtobufDecoder(MessageProtocolInfo.MessageProtocol.getDefaultInstance()));
         ph.addLast("encoder", new ProtobufEncoder());

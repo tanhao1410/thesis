@@ -21,10 +21,17 @@ public class MonitoringData {
      */
     private String value;
 
-    private Long ruleId;
-
+    /**
+     * 监控项名称
+     */
     private String name;
 
     private Long deviceId;
+
+    /**
+     * 监控项id
+     */
+    private Long itemId;
+
 
 }
