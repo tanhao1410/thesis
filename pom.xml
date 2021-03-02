@@ -13,6 +13,7 @@
         <module>tcp-protocol</module>
         <module>message-queue-service</module>
         <module>email-service</module>
+        <module>login-user</module>
     </modules>
 
     <parent>

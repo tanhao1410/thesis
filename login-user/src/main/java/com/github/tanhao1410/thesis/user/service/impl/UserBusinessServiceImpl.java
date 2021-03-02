@@ -53,7 +53,7 @@ public class UserBusinessServiceImpl implements IUserBusinessService {
             queryUser.setName(PasswordUtil.deCodePassword(userName, RSAUtils.privateKey));
             //queryUser.setUserName(userName);
 
-            List<UserDO> userDOList = userDOMapper.selectPageSelective(queryUser, new PageRequest(0, 1));
+            List<UserDO> userDOList = userDOMapper.selectPageSelective(queryUser, new PageRequest(0, 1,null));
             if (CollectionUtils.isEmpty(userDOList)) {
                 return ResultContentVO.Fail(ResultConstans.FIAL_CODE, ResultConstans.NO_USER);
             }
