@@ -10,4 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AlarmChangeMsg {
+
+    private Long deviceId;
+    private Long alarmId;
 }

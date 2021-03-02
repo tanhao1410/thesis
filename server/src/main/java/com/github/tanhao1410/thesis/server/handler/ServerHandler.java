@@ -36,13 +36,13 @@ public class ServerHandler extends SimpleChannelInboundHandler<MessageProtocolIn
 
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
-        ClientChannelManagment.removeClient(ctx);
+        SpringBeanManagement.clientChannelManagment.removeClient(ctx);
         super.handlerRemoved(ctx);
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        ClientChannelManagment.removeClient(ctx);
+        SpringBeanManagement.clientChannelManagment.removeClient(ctx);
         ctx.close();
     }
 
@@ -67,7 +67,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<MessageProtocolIn
             System.out.println("客户端信息上传ip :" + ip + " port : " + port);
 
             //将客户端放入管理类中管理
-            ClientChannelManagment.clientChannelJoin(ctx, clientInfo);
+            SpringBeanManagement.clientChannelManagment.clientChannelJoin(ctx, clientInfo);
 
             final DeviceDOMapper deviceDOMapper = SpringBeanManagement.deviceDOMapper;
             DeviceDO queryDo = new DeviceDO();

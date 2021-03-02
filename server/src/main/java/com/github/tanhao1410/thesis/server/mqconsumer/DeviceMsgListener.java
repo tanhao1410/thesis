@@ -8,6 +8,8 @@ import com.github.tanhao1410.thesis.common.mapper.DeviceDOMapper;
 import com.github.tanhao1410.thesis.common.mapper.HistoryAlarmDOMapper;
 import com.github.tanhao1410.thesis.common.mapper.MonitoringItemDOMapper;
 import com.github.tanhao1410.thesis.mq.MQConstant;
+import com.github.tanhao1410.thesis.mq.RedisService;
+import com.github.tanhao1410.thesis.mq.bean.AlarmChangeMsg;
 import com.github.tanhao1410.thesis.mq.bean.DeviceChangeMsg;
 import com.github.tanhao1410.thesis.protocol.MessageProtocolInfo;
 import com.github.tanhao1410.thesis.protocol.MessageTypeEnum;
@@ -16,6 +18,7 @@ import com.github.tanhao1410.thesis.protocol.bean.MonitoringConfig;
 import com.github.tanhao1410.thesis.server.comm.ClientChannelManagment;
 import com.github.tanhao1410.thesis.server.service.ClientCommService;
 import com.github.tanhao1410.thesis.server.service.MonitoringConfigService;
+import com.github.tanhao1410.thesis.server.spring.SpringBeanManagement;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +54,8 @@ public class DeviceMsgListener extends MessageListenerAdapter {
     private MonitoringConfigService monitoringConfigService;
     @Resource
     private ClientCommService clientCommService;
+    @Resource
+    private RedisService redisService;
     
     @Autowired
     public DeviceMsgListener(RedisMessageListenerContainer messageListenerContainer) {
@@ -59,7 +64,7 @@ public class DeviceMsgListener extends MessageListenerAdapter {
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        System.out.println("接收到Redis的消息:" +  new String(message.getBody()));
+        System.out.println("server接收到管理系统的消息:" +  new String(message.getBody()));
         String msgBody = new String(message.getBody());
         //新增浏览记录
         try {
@@ -69,14 +74,13 @@ public class DeviceMsgListener extends MessageListenerAdapter {
             final DeviceChangeMsg msgObj = JSON.parseObject(msg, DeviceChangeMsg.class);
             String channelName = msgObj.getIp() + ":" + msgObj.getPort();
 
-            final ChannelHandlerContext ctx = ClientChannelManagment.getClientChannelByName(channelName);
+            final ChannelHandlerContext ctx = SpringBeanManagement.clientChannelManagment.getClientChannelByName(channelName);
 
             //判断设备是新增，删除，还是修改
             if(msgObj.getType() == DeviceChangeMsg.Type.CREATE.getId()){
 
-                final DeviceDO deviceDO = deviceDOMapper.selectByPrimaryKey(msgObj.getId());
-
-
+                AlarmChangeMsg alarmMsg = new AlarmChangeMsg();
+                //新增设备时判断设备是否在线
                 if (ctx == null){
                     //说明客户端未在线，生成一个不在线的告警返回。
                     AlarmDO record = new AlarmDO();
@@ -85,19 +89,29 @@ public class DeviceMsgListener extends MessageListenerAdapter {
                     record.setStartTime(new Date(System.currentTimeMillis()));
                     record.setValue("0");
                     record.setIsNormal(false);
+                    //alarmDOMapper.insert(record);
+                    final Long alarmId = alarmDOMapper.insertSelectiveReturnPrimaryKey(record);
 
-                    alarmDOMapper.insert(record);
-
+                    alarmMsg.setDeviceId(msgObj.getId());
+                    alarmMsg.setAlarmId(alarmId);
 
                 }else{
-                    //说明客户端已经连接上了，第一次不用下发配置，直接生成一个正常状态的告警，表明设备在线。
+                    //说明客户端已经连接上了，第一次下发配置，直接生成一个正常状态的告警，表明设备在线。
+                    //说明客户端未在线，生成一个不在线的告警返回。
+                    AlarmDO record = new AlarmDO();
+                    record.setDeviceId(msgObj.getId());
+                    record.setRuleId(1L);
+                    record.setStartTime(new Date(System.currentTimeMillis()));
+                    record.setValue("0");
+                    record.setIsNormal(true);
+                    //alarmDOMapper.insert(record);
+                    final Long alarmId = alarmDOMapper.insertSelectiveReturnPrimaryKey(record);
 
-                    //
-
-                    MonitoringConfig config = new MonitoringConfig();
-
+                    alarmMsg.setDeviceId(msgObj.getId());
+                    alarmMsg.setAlarmId(alarmId);
                 }
 
+                redisService.pubMessage(MQConstant.ALARM_CHANGE_MESSAGE_NAME, JSON.toJSONString(alarmMsg));
 
 
             }else if(msgObj.getType() ==  DeviceChangeMsg.Type.DELETE.getId()){

@@ -10,6 +10,7 @@ import com.github.tanhao1410.thesis.protocol.bean.MonitoringConfig;
 import com.github.tanhao1410.thesis.server.comm.ClientChannelManagment;
 import com.github.tanhao1410.thesis.server.service.ClientCommService;
 import com.github.tanhao1410.thesis.server.service.MonitoringConfigService;
+import com.github.tanhao1410.thesis.server.spring.SpringBeanManagement;
 import io.netty.channel.ChannelHandlerContext;
 import org.springframework.stereotype.Service;
 
@@ -48,7 +49,7 @@ public class ClientCommServiceImpl implements ClientCommService {
             String channelName = deviceDO.getIp() + ":" + deviceDO.getPort();
             //String channelName = deviceDO.getIp();
 
-            final ChannelHandlerContext ctx = ClientChannelManagment.getClientChannelByName(channelName);
+            final ChannelHandlerContext ctx = SpringBeanManagement.clientChannelManagment.getClientChannelByName(channelName);
             ctx.writeAndFlush(configMsg);
         }
     }

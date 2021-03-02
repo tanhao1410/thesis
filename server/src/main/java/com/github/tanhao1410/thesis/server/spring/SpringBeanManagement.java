@@ -2,6 +2,7 @@ package com.github.tanhao1410.thesis.server.spring;
 
 import com.github.tanhao1410.thesis.common.mapper.*;
 import com.github.tanhao1410.thesis.mq.RedisService;
+import com.github.tanhao1410.thesis.server.comm.ClientChannelManagment;
 import com.github.tanhao1410.thesis.server.service.ClientCommService;
 import com.github.tanhao1410.thesis.server.service.MonitoringConfigService;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -21,6 +22,7 @@ public class SpringBeanManagement {
     public static RedisService redisService;
     public static MonitoringConfigService monitoringConfigService;
     public static ClientCommService clientCommService;
+    public static ClientChannelManagment clientChannelManagment;
 
     /**
      * 初始化Spring中的Bean，放入到该管理器中。以方便使用。
@@ -36,5 +38,6 @@ public class SpringBeanManagement {
         monitoringConfigService = context.getBean(MonitoringConfigService.class);
         clientCommService = context.getBean(ClientCommService.class);
         monitoringItemDOMapper = context.getBean(MonitoringItemDOMapper.class);
+        clientChannelManagment = context.getBean(ClientChannelManagment.class);
     }
 }
