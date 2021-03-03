@@ -6,7 +6,7 @@ import com.github.tanhao1410.thesis.common.bean.UserBean;
 import com.github.tanhao1410.thesis.common.bean.request.LoginOutRequest;
 import com.github.tanhao1410.thesis.common.bean.request.LoginRequest;
 import com.github.tanhao1410.thesis.common.bean.response.LoginResponse;
-import com.github.tanhao1410.thesis.common.utils.utils.RSAUtils;
+import com.github.tanhao1410.thesis.common.utils.RSAUtils;
 import com.github.tanhao1410.thesis.user.interceptor.LoginContext;
 import com.github.tanhao1410.thesis.user.service.IUserBusinessService;
 import lombok.extern.slf4j.Slf4j;

@@ -9,9 +9,10 @@
     <result column="value" jdbcType="VARCHAR" property="value" />
     <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
     <result column="is_normal" jdbcType="BIT" property="isNormal" />
+    <result column="level" jdbcType="INTEGER" property="level" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, name, device_id, item_id, value, start_time, is_normal
+    id, name, device_id, item_id, value, start_time, is_normal, level
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -26,10 +27,10 @@
   <insert id="insert" parameterType="com.github.tanhao1410.thesis.common.domain.AlarmDO">
     insert into alarm (id, name, device_id, 
       item_id, value, start_time, 
-      is_normal)
+      is_normal, level)
     values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{deviceId,jdbcType=BIGINT}, 
       #{itemId,jdbcType=BIGINT}, #{value,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP}, 
-      #{isNormal,jdbcType=BIT})
+      #{isNormal,jdbcType=BIT}, #{level,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.github.tanhao1410.thesis.common.domain.AlarmDO">
     insert into alarm
@@ -55,6 +56,9 @@
       <if test="isNormal != null">
         is_normal,
       </if>
+      <if test="level != null">
+        level,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -77,6 +81,9 @@
       </if>
       <if test="isNormal != null">
         #{isNormal,jdbcType=BIT},
+      </if>
+      <if test="level != null">
+        #{level,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -101,6 +108,9 @@
       <if test="isNormal != null">
         is_normal = #{isNormal,jdbcType=BIT},
       </if>
+      <if test="level != null">
+        level = #{level,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -111,7 +121,8 @@
       item_id = #{itemId,jdbcType=BIGINT},
       value = #{value,jdbcType=VARCHAR},
       start_time = #{startTime,jdbcType=TIMESTAMP},
-      is_normal = #{isNormal,jdbcType=BIT}
+      is_normal = #{isNormal,jdbcType=BIT},
+      level = #{level,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectCountSelective" resultType="java.lang.Long">
@@ -134,6 +145,9 @@
       </if>
       <if test="record.isNormal != null">
          and is_normal = #{record.isNormal,jdbcType=BIT}
+      </if>
+      <if test="record.level != null">
+         and level = #{record.level,jdbcType=INTEGER}
       </if>
     </where>
   </select>
@@ -160,10 +174,13 @@
       <if test="record.isNormal != null">
          and is_normal = #{record.isNormal,jdbcType=BIT}
       </if>
+      <if test="record.level != null">
+         and level = #{record.level,jdbcType=INTEGER}
+      </if>
       <if test="pageable.sort != null">
          order by 
         <foreach collection="pageable.sort" item="order" separator=",">
-          <if test="order.property == 'id' || order.property == 'name'  || order.property == 'device_id'  || order.property == 'item_id'  || order.property == 'value'  || order.property == 'start_time'  || order.property == 'is_normal' ">
+          <if test="order.property == 'id' || order.property == 'name'  || order.property == 'device_id'  || order.property == 'item_id'  || order.property == 'value'  || order.property == 'start_time'  || order.property == 'is_normal'  || order.property == 'level' ">
              ${order.property} ${order.direction} 
           </if>
         </foreach>
@@ -204,6 +221,9 @@
       <if test="isNormal != null">
         is_normal,
       </if>
+      <if test="level != null">
+        level,
+      </if>
     </trim>
     <trim prefix=" values (" suffix=")" suffixOverrides=",">
       <if test="name != null">
@@ -224,12 +244,15 @@
       <if test="isNormal != null">
         #{isNormal,jdbcType=BIT},
       </if>
+      <if test="level != null">
+        #{level,jdbcType=INTEGER},
+      </if>
     </trim>
   </insert>
   <insert id="batchInsert" parameterType="com.github.tanhao1410.thesis.common.domain.AlarmDO">
-    insert into alarm (name,device_id,item_id,value,start_time,is_normal ) values 
+    insert into alarm (name,device_id,item_id,value,start_time,is_normal,level ) values 
     <foreach collection="list" index="index" item="item" separator=",">
-       (#{item.name,jdbcType=VARCHAR},#{item.deviceId,jdbcType=BIGINT},#{item.itemId,jdbcType=BIGINT},#{item.value,jdbcType=VARCHAR},#{item.startTime,jdbcType=TIMESTAMP},#{item.isNormal,jdbcType=BIT} ) 
+       (#{item.name,jdbcType=VARCHAR},#{item.deviceId,jdbcType=BIGINT},#{item.itemId,jdbcType=BIGINT},#{item.value,jdbcType=VARCHAR},#{item.startTime,jdbcType=TIMESTAMP},#{item.isNormal,jdbcType=BIT},#{item.level,jdbcType=INTEGER} ) 
     </foreach>
   </insert>
   <select id="batchSelectByPrimaryKey" parameterType="java.util.List" resultMap="BaseResultMap">
@@ -261,6 +284,9 @@
       <if test="isNormal != null">
         is_normal,
       </if>
+      <if test="level != null">
+        level,
+      </if>
     </trim>
     <trim prefix=" values (" suffix=")" suffixOverrides=",">
       <if test="name != null">
@@ -280,6 +306,9 @@
       </if>
       <if test="isNormal != null">
         #{isNormal,jdbcType=BIT},
+      </if>
+      <if test="level != null">
+        #{level,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>

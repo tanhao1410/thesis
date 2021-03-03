@@ -48,7 +48,7 @@
                 <div class="summary-wrapper">
                     <el-button
                             type="primary"
-                            @click="summary()"
+                            @click="openUploadDialog()"
                     >
                         增加设备组
                     </el-button>
@@ -56,7 +56,7 @@
                 <div class="summary-wrapper">
                     <el-button
                             type="primary"
-                            @click="summary()"
+                            @click="openUploadDialog()"
                     >
                         增加设备
                     </el-button>
@@ -64,13 +64,57 @@
                 <div class="summary-wrapper">
                     <el-button
                             type="primary"
-                            @click="summary()"
+                            @click="saveLocation()"
                     >
                         保存位置
                     </el-button>
                 </div>
+                <div class="summary-wrapper">
+                    <el-button
+                            type="primary"
+                            @click="summary()"
+                    >
+                        全屏显示
+                    </el-button>
+                </div>
+                <div class="summary-wrapper">
+                    <el-button
+                            type="primary"
+                            @click="summary()"
+                    >
+                        导出图片
+                    </el-button>
+                </div>
             </div>
         </div>
+
+        <!-- 上传弹窗 -->
+        <el-dialog title="新建设备组" :visible.sync="dialogVisible" :close-on-click-modal="false" width="40%">
+            <div class="content">
+                <el-form :model="uploadForm" :rules="uploadRules" ref="uploadForm" label-width="100px"
+                         class="demo-ruleForm">
+                    <el-form-item label="设备组名称：" prop="companyValue">
+                        <el-select clearable v-model="uploadForm.companyValue" placeholder="请选择"
+                                   popper-class="company-select">
+                            <el-option v-for="item in companyList" :key="item.id" :label="item.name"
+                                       :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="月份：" prop="month">
+                        <el-date-picker popper-class="financial-date-picker" v-model="uploadForm.month"
+                                        value-format="yyyy-MM" type="month" placeholder="选择月">
+                        </el-date-picker>
+                    </el-form-item>
+
+                </el-form>
+            </div>
+
+            <span slot="footer" class="dialog-footer">
+                    <el-button :disabled="submitLoading" @click="dialogVisible = false">取 消</el-button>
+                    <el-button :loading="submitLoading" type="primary" @click="submitUpload()">确 定</el-button>
+                </span>
+        </el-dialog>
 
     </div>
 
@@ -93,7 +137,28 @@
             multipleSelection: [],
             // 类型筛选
             fildType: '',
-            fildTypeList: []
+            dialogVisible: false,
+            submitLoading: false,
+            // 子公司
+            uploadForm: {
+                companyValue: null,
+                month: null,
+                "payFileId": "",
+                "payFileName": "",
+                "fundFileId": "",
+                "fundFileName": ""
+            },
+            uploadRules: {
+                companyValue: [
+                    { required: true, message: "请选择", trigger: "change" }
+                ],
+                month: [
+                    { required: true, message: "请选择", trigger: "change" }
+                ],
+            },
+            fildTypeList: [],
+            // 字典表相关
+            companyList: [],
         },
         mounted() {
             //this.getFildType()
@@ -105,6 +170,23 @@
                 }
 
             },
+            // 打开上传弹框
+            openUploadDialog() {
+                this.dialogVisible = true;
+                this.uploadForm.payFileId = "";
+                this.uploadForm.payFileName = "";
+                this.uploadForm.fundFileId = "";
+                this.uploadForm.fundFileName = "";
+                this.uploadForm.month = "";
+                this.uploadForm.companyValue = "";
+                this.payFileList = [];
+                this.fundFileList = [];
+                this.$nextTick(() => {
+                    this.$refs.uploadForm.resetFields();
+                });
+                this.getCompanyData();
+            },
+            saveLocation,
             getTableData() {
                 this.loading = true;
                 let params = {

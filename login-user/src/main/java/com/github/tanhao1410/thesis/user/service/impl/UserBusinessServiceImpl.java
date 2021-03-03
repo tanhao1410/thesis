@@ -11,8 +11,8 @@ import com.github.tanhao1410.thesis.common.constants.ResultConstans;
 import com.github.tanhao1410.thesis.common.domain.UserDO;
 import com.github.tanhao1410.thesis.common.mapper.UserDOMapper;
 
-import com.github.tanhao1410.thesis.common.utils.utils.PasswordUtil;
-import com.github.tanhao1410.thesis.common.utils.utils.RSAUtils;
+import com.github.tanhao1410.thesis.common.utils.PasswordUtil;
+import com.github.tanhao1410.thesis.common.utils.RSAUtils;
 import com.github.tanhao1410.thesis.user.interceptor.ExpireMap;
 import com.github.tanhao1410.thesis.user.service.IUserBusinessService;
 import lombok.extern.slf4j.Slf4j;

@@ -3,6 +3,7 @@ package com.github.tanhao1410.thesis.management.controller;
 
 
 import com.github.tanhao1410.thesis.common.bean.ActionResult;
+import com.github.tanhao1410.thesis.common.bean.response.AlarmListResponse;
 import com.github.tanhao1410.thesis.common.domain.AlarmDO;
 import com.github.tanhao1410.thesis.management.service.AlarmService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +29,12 @@ public class AlarmController {
      */
     @ResponseBody
     @RequestMapping( method = RequestMethod.GET)
-    public ResponseEntity getAllNetwork(@RequestParam("networkId") Long networkId) {
+    public ResponseEntity getAllNetwork(@RequestParam("groupId") Long groupId) {
 
         ActionResult result = new ActionResult();
         try {
-            List<AlarmDO> list = alarmService.getAllAlarm(networkId);
-            return ResponseEntity.status(HttpStatus.OK).body(list);
+            AlarmListResponse response = alarmService.getAllAlarm(groupId);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
             result.setMsg(e.toString());
             e.printStackTrace();

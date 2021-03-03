@@ -1,4 +1,4 @@
-package com.github.tanhao1410.thesis.common.utils.utils;
+package com.github.tanhao1410.thesis.common.utils;
 
 
 

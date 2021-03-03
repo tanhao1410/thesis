@@ -3,7 +3,9 @@ package com.github.tanhao1410.thesis.management.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.tanhao1410.thesis.common.bean.UserBean;
+import com.github.tanhao1410.thesis.common.domain.DeviceDO;
 import com.github.tanhao1410.thesis.common.domain.GroupDO;
+import com.github.tanhao1410.thesis.common.mapper.DeviceDOMapper;
 import com.github.tanhao1410.thesis.common.mapper.ExtGroupDOMapper;
 import com.github.tanhao1410.thesis.common.mapper.GroupDOMapper;
 import com.github.tanhao1410.thesis.management.service.GroupService;
@@ -25,9 +27,8 @@ public class GroupServiceImpl implements GroupService {
     @Resource
     private GroupDOMapper groupDOMapper;
 
-    @Autowired
-    private RedisService redisService;
-
+    @Resource
+    private DeviceDOMapper deviceDOMapper;
 
     @Resource
     private ExtGroupDOMapper extGroupDOMapper;
@@ -58,9 +59,15 @@ public class GroupServiceImpl implements GroupService {
            JSONObject obj =  jsonArray.getJSONObject(i);
            if("node".equals(obj.getString("type"))){
                //说明要保存的节点是设备节点
-
+               DeviceDO deviceDO = deviceDOMapper.selectByPrimaryKey(obj.getLong("id"));
+               deviceDO.setX(obj.getInteger("x"));
+               deviceDO.setY(obj.getInteger("y"));
+               deviceDOMapper.updateByPrimaryKey(deviceDO);
            }else{
-
+               GroupDO deviceDO = groupDOMapper.selectByPrimaryKey(obj.getLong("id"));
+               deviceDO.setX(obj.getInteger("x"));
+               deviceDO.setY(obj.getInteger("y"));
+               groupDOMapper.updateByPrimaryKey(deviceDO);
            }
         }
     }
