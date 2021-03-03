@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 /**
  * 框架自动生成表模型和CRUD操作，勿修改；
  * 如特殊需要，请以Ext***Mapper自行扩展；
- * 生成日期 : 2021-03-02 13:25:30
+ * 生成日期 : 2021-03-03 13:42:20
  * @author ##tanhao##
  */
 @Repository
@@ -44,7 +44,7 @@ public interface MonitoringRuleDOMapper {
     /**
      * 插入行记录返回影响行数，使用getId()获取插入行记录的Id
      */
-    Integer insertSelectiveReturnPrimaryKey(MonitoringRuleDO record);
+    Long insertSelectiveReturnPrimaryKey(MonitoringRuleDO record);
 
     /**
      * 批量插入行数据返回插入行数
@@ -61,4 +61,9 @@ public interface MonitoringRuleDOMapper {
      * 如果插入的字段中有UNIQUE KEY, KEY已经存在则不予插入返回0，不会抛出DuplicateKeyException
      */
     Integer insertIgnoreSelective(MonitoringRuleDO record);
+
+    /**
+     * 查询所有
+     */
+    List<MonitoringRuleDO> selectAll();
 }

@@ -44,7 +44,7 @@ public interface DeviceDOMapper {
     /**
      * 插入行记录返回影响行数，使用getId()获取插入行记录的Id
      */
-    Integer insertSelectiveReturnPrimaryKey(DeviceDO record);
+    Long insertSelectiveReturnPrimaryKey(DeviceDO record);
 
     /**
      * 批量插入行数据返回插入行数
