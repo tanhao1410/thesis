@@ -26,22 +26,21 @@ Vue.component('main-header', {
         }
     },
     mounted() {
-        //this.getUserInfo();
+        this.getUserInfo();
     },
     methods: {
         // 获取用户详情
         getUserInfo() {
             let params = {};
             httpGet(
-                "/financial/userService/userInfo",
+                "/loginUser/userInfo",
                 params,
                 this,
                 (err, res) => {
                     if (!err) {
                         if (0 === res.code) {
                             this.username = res.result.name|| res.result.userName;
-                            this.handleRole(res.result.roleId)
-                        } else if (-88 === res.code) {
+                        } else if (88 === res.code) {
                             window.location.href = "/login.html"
                         } else {
                             this.$message.error(res.resultMessage);
@@ -71,7 +70,7 @@ Vue.component('main-header', {
         // 退出
         handleSelect(key) {
             if ("logout" === key) {
-                httpPost("/financial/userService/logOut", {}, this, (err, res) => {
+                httpPost("/loginUser/logOut", {}, this, (err, res) => {
                     if (!err) {
                         if (0 === res.code) {
                             window.location.href = `/login.html`;

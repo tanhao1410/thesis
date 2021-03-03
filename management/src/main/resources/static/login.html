@@ -162,7 +162,7 @@
                 };
                 this.loading = true;
                 httpPost(
-                    "/financial/userService/login",
+                    "/loginUser/login",
                     params,
                     this,
                     (err, res) => {
@@ -170,7 +170,7 @@
                         if (!err) {
                             if (0 === res.code) {
                                 //正常登录
-                                window.location.href = res.result.redirtUrl;
+                                window.location.href = "index.html";
                             } else if (-1 === res.code) {
                                 this.$set(this.errorTip, "hide", true);
                                 this.$set(this.errorTip, "msg", res.resultMessage);
@@ -192,7 +192,7 @@
                 let publicKey = null;
                 let params = {};
                 httpGet(
-                    "/financial/userService/rsaPublicKey",
+                    "/loginUser/rsaPublicKey",
                     params,
                     this,
                     (err, res) => {
@@ -216,15 +216,15 @@
             getUserInfo() {
                 let params = {};
                 httpGet(
-                    "/financial/userService/userInfo",
+                    "/loginUser/userInfo",
                     params,
                     this,
                     (err, res) => {
                         if (!err) {
                             if (0 === res.code) {
-                                window.location.href = res.result.redirtUrl;
+                                window.location.href = "index.html";
                             } else if (-88 !== res.code) {
-                                this.$message.error(res.resultMessage);
+                                //this.$message.error(res.resultMessage);
                             }
                         } else {
                             this.$message.error("获取用户信息失败");

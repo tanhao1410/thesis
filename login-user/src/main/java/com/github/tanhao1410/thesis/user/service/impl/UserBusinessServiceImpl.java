@@ -35,8 +35,6 @@ public class UserBusinessServiceImpl implements IUserBusinessService {
     @Resource
     private UserDOMapper userDOMapper;
 
-
-
     @Override
     public ResultContentVO<LoginResponse> login(String userName, String password) {
         if (StringUtils.isEmpty(password) || StringUtils.isEmpty(password)) {

@@ -21,7 +21,7 @@ import java.util.Map;
 
 @RestController
 @Slf4j
-@RequestMapping("/management/login")
+@RequestMapping("/loginUser")
 public class LoginController {
 
     @Resource
@@ -101,7 +101,6 @@ public class LoginController {
                 for (Cookie cookie : cookies) {
                     if (cookie.getName().equals("token")) {
                         token = cookie.getValue();
-                        System.out.println(token);
                     }
                 }
             }
