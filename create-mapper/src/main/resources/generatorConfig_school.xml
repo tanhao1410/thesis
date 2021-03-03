@@ -37,39 +37,8 @@
             <property name="enableSubPackages" value="true"/>  
         </javaClientGenerator>
 
-		<table tableName="device_group" domainObjectName="GroupDO"
-			   enableCountByExample="false" enableSelectByExample="false"
-			   enableDeleteByExample="false" enableUpdateByExample="false" selectByExampleQueryId="false"/>
-
-		<table tableName="alarm" domainObjectName="AlarmDO"
-			   enableCountByExample="false" enableSelectByExample="false"
-			   enableDeleteByExample="false" enableUpdateByExample="false" selectByExampleQueryId="false"/>
-
-		<table tableName="device" domainObjectName="DeviceDO"
-			   enableCountByExample="false" enableSelectByExample="false"
-			   enableDeleteByExample="false" enableUpdateByExample="false" selectByExampleQueryId="false"/>
-
-		<table tableName="history_alarm" domainObjectName="HistoryAlarmDO"
-			   enableCountByExample="false" enableSelectByExample="false"
-			   enableDeleteByExample="false" enableUpdateByExample="false" selectByExampleQueryId="false"/>
-
-		<table tableName="monitoring_data" domainObjectName="MonitoringDataDO"
-			   enableCountByExample="false" enableSelectByExample="false"
-			   enableDeleteByExample="false" enableUpdateByExample="false" selectByExampleQueryId="false"/>
-
-		<table tableName="monitoring_item" domainObjectName="MonitoringItemDO"
-			   enableCountByExample="false" enableSelectByExample="false"
-			   enableDeleteByExample="false" enableUpdateByExample="false" selectByExampleQueryId="false"/>
 
 		<table tableName="monitoring_rule" domainObjectName="MonitoringRuleDO"
-			   enableCountByExample="false" enableSelectByExample="false"
-			   enableDeleteByExample="false" enableUpdateByExample="false" selectByExampleQueryId="false"/>
-
-		<table tableName="user" domainObjectName="UserDO"
-			   enableCountByExample="false" enableSelectByExample="false"
-			   enableDeleteByExample="false" enableUpdateByExample="false" selectByExampleQueryId="false"/>
-
-		<table tableName="user_group" domainObjectName="UserGroupDO"
 			   enableCountByExample="false" enableSelectByExample="false"
 			   enableDeleteByExample="false" enableUpdateByExample="false" selectByExampleQueryId="false"/>
 

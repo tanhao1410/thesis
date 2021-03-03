@@ -30,7 +30,7 @@ public class InsertSelectiveReturnPrimaryKeyGenerated implements AbstractGenerat
 		insertSelectiveReturnPrimaryKeyMethod.addJavaDocLine(" */");
 		insertSelectiveReturnPrimaryKeyMethod.setName("insertSelectiveReturnPrimaryKey");
 		insertSelectiveReturnPrimaryKeyMethod.setVisibility(JavaVisibility.PUBLIC);
-		insertSelectiveReturnPrimaryKeyMethod.setReturnType(new FullyQualifiedJavaType("java.lang.Integer"));
+		insertSelectiveReturnPrimaryKeyMethod.setReturnType(new FullyQualifiedJavaType("java.lang.Long"));
 		insertSelectiveReturnPrimaryKeyMethod.addParameter(new Parameter(new FullyQualifiedJavaType(baseRecordType), Generator.QUERY_VAR_NAME));
     	
 		return insertSelectiveReturnPrimaryKeyMethod;

@@ -35,6 +35,7 @@ public class PPDPluginAdapter extends PluginAdapter {
 		abstractGenerateds.add(new BatchInsertGenerated());
 		abstractGenerateds.add(new BatchSelectByPrimaryKeyGenerated());
 		abstractGenerateds.add(new InsertIgnoreSelectiveGenerated());
+		abstractGenerateds.add(new SelectAllGenerated());
 	}
 	
 	@Override  
