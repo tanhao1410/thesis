@@ -14,13 +14,6 @@ import java.util.Map;
 public abstract class AbstractCollectMethod {
 
     /**
-     * 返回采集方法的名称
-     *
-     * @return
-     */
-    public abstract String getName();
-
-    /**
      * 采集方法，返回值
      * @param param
      * @return
@@ -34,23 +27,9 @@ public abstract class AbstractCollectMethod {
      * @return
      */
     public static AbstractCollectMethod getCollectMethodByName(String name) {
-        return methods.get(name);
+        return CollectionMethodFactory.getCollectMethodBean(name);
     }
 
-    private static Map<String, AbstractCollectMethod> methods = new HashMap<>();
 
-    static {
-        final AbstractCollectMethod cpuUsageCollectMethod = new CPUUsageCollectMethod();
-        final AbstractCollectMethod memUsageCollectMethod = new MemUsageCollectMethod();
-        final AbstractCollectMethod diskUsageCollectMethod = new DiskUsageCollectMethod();
-        final AbstractCollectMethod serviceMemUsageMonitoreMethod = new ServiceMemUsageMonitoreMethod();
-        final AbstractCollectMethod serviceStatusMonitoreMethod = new ServiceStatusMonitoreMethod();
-
-        methods.put(cpuUsageCollectMethod.getName(), cpuUsageCollectMethod);
-        methods.put(memUsageCollectMethod.getName(), memUsageCollectMethod);
-        methods.put(diskUsageCollectMethod.getName(), diskUsageCollectMethod);
-        methods.put(serviceMemUsageMonitoreMethod.getName(), serviceMemUsageMonitoreMethod);
-        methods.put(serviceStatusMonitoreMethod.getName(), serviceStatusMonitoreMethod);
-    }
 
 }

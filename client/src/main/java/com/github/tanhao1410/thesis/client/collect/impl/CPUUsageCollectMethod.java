@@ -1,6 +1,7 @@
 package com.github.tanhao1410.thesis.client.collect.impl;
 
 import com.github.tanhao1410.thesis.client.collect.AbstractCollectMethod;
+import com.github.tanhao1410.thesis.client.collect.Collection;
 import oshi.SystemInfo;
 import oshi.hardware.CentralProcessor;
 
@@ -12,13 +13,10 @@ import java.util.concurrent.TimeUnit;
  * @author tanhao
  * @date 2021/02/24 12:47
  */
+@Collection("cpu使用率监控方法")
 public class CPUUsageCollectMethod extends AbstractCollectMethod {
 
 
-    @Override
-    public String getName() {
-        return "cpu使用率监控方法";
-    }
 
     @Override
     public String getValue(String param) {

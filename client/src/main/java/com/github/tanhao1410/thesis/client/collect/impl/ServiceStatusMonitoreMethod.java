@@ -1,6 +1,7 @@
 package com.github.tanhao1410.thesis.client.collect.impl;
 
 import com.github.tanhao1410.thesis.client.collect.AbstractCollectMethod;
+import com.github.tanhao1410.thesis.client.collect.Collection;
 import oshi.SystemInfo;
 import oshi.hardware.GlobalMemory;
 import oshi.hardware.HardwareAbstractionLayer;
@@ -16,11 +17,8 @@ import java.util.List;
  * @author tanhao
  * @date 2021/02/24 13:19
  */
+@Collection("服务存活状态监控方法")
 public class ServiceStatusMonitoreMethod extends AbstractCollectMethod {
-    @Override
-    public String getName() {
-        return "服务存活状态监控方法";
-    }
 
     @Override
     public String getValue(String param) {

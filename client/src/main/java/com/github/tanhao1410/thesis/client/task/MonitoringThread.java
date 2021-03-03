@@ -49,7 +49,7 @@ public class MonitoringThread extends Thread {
     @Override
     public void run() {
 
-        System.out.println("信息采集客户端启动采集线程："+method.getName());
+        System.out.println("信息采集客户端启动采集线程："+config.getMonitoringMethod());
 
         Boolean preStatus = null;
 
