@@ -60,4 +60,9 @@ public class MonitoringConfig implements Serializable {
      * 监控项名称
      */
     private String itemName;
+
+    /**
+     * 发生告警后级别
+     */
+    private Integer level;
 }

@@ -91,6 +91,7 @@ public class ClientChannelManagment {
                     historyAlarmDOMapper.insert(historyAlarmDO);
 
                     alarm.setValue("在线");
+                    alarm.setLevel(0);
                     alarm.setIsNormal(true);
                     alarm.setStartTime(new Date(System.currentTimeMillis()));
                     alarmDOMapper.updateByPrimaryKey(alarm);
@@ -105,6 +106,7 @@ public class ClientChannelManagment {
                 //系统中不存在这个告警
                 queryAlarmDo.setIsNormal(true);
                 queryAlarmDo.setValue("在线");
+                queryAlarmDo.setLevel(0);
                 queryAlarmDo.setStartTime(new Date(System.currentTimeMillis()));
                 queryAlarmDo.setName("在线状态");
 
@@ -169,6 +171,7 @@ public class ClientChannelManagment {
                 if(alarm.getIsNormal()){
                     alarm.setIsNormal(false);
                     alarm.setValue("断线");
+                    alarm.setLevel(4);
                     alarm.setStartTime(new Date(System.currentTimeMillis()));
                     alarmDOMapper.updateByPrimaryKey(alarm);
                     //通知管理系统
@@ -181,6 +184,7 @@ public class ClientChannelManagment {
                 //系统中不存在这个告警
                 queryAlarmDo.setIsNormal(false);
                 queryAlarmDo.setValue("断线");
+                queryAlarmDo.setLevel(4);
                 queryAlarmDo.setStartTime(new Date(System.currentTimeMillis()));
                 queryAlarmDo.setName("在线状态");
                 alarmDOMapper.insert(queryAlarmDo);

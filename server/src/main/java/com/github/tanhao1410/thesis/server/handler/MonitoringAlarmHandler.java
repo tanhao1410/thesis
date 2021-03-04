@@ -70,11 +70,15 @@ public class MonitoringAlarmHandler extends SimpleChannelInboundHandler<MessageP
                         alarmDO.setStartTime(new Date(System.currentTimeMillis()));
                         alarmDO.setValue(monitoringAlarm.getValue());
                         alarmDO.setIsNormal(monitoringAlarm.getIsNormal());
+                        alarmDO.setLevel(0);
                     } else {
                         //正常---->不正常
                         alarmDO.setIsNormal(false);
                         alarmDO.setStartTime(new Date(System.currentTimeMillis()));
                         alarmDO.setValue(monitoringAlarm.getValue());
+
+                        //设置告警的级别
+                        alarmDO.setLevel(monitoringAlarm.getLevel());
 
                         //更新当前告警表
                         alarmDOMapper.updateByPrimaryKey(alarmDO);
@@ -87,6 +91,7 @@ public class MonitoringAlarmHandler extends SimpleChannelInboundHandler<MessageP
                 queryDo.setIsNormal(monitoringAlarm.getIsNormal());
                 queryDo.setValue(monitoringAlarm.getValue());
                 queryDo.setItemId(monitoringAlarm.getItemId());
+                queryDo.setLevel(monitoringAlarm.getLevel());
 
                 alarmDOMapper.insert(queryDo);
             }

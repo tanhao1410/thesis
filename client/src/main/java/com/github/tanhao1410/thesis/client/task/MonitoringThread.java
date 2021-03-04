@@ -65,6 +65,13 @@ public class MonitoringThread extends Thread {
                 final String value = method.getValue(config.getParam());
                 //config.getAlarmCondition()
 
+                final boolean status = !AlarmConditionEnum.isAlarm(value, config.getThreshold(), config.getAlarmCondition());
+
+
+                if(preStatus != null && preStatus.equals(status)){
+                    continue;
+                }
+
                 MonitoringAlarm alarmInfo = new MonitoringAlarm();
 
                 alarmInfo.setTime(System.currentTimeMillis());
@@ -72,13 +79,8 @@ public class MonitoringThread extends Thread {
                 alarmInfo.setDeviceId(config.getDeviceId());
                 alarmInfo.setName(config.getItemName());
                 alarmInfo.setItemId(config.getItemId());
-
-                final boolean status = !AlarmConditionEnum.isAlarm(value, config.getThreshold(), config.getAlarmCondition());
+                alarmInfo.setLevel(status?0:config.getLevel());
                 alarmInfo.setIsNormal(status);
-
-                if(preStatus != null && preStatus.equals(status)){
-                    continue;
-                }
 
                 //记录本次状态
                 preStatus = status;

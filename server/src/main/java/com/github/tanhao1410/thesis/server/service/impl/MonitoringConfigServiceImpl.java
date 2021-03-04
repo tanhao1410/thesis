@@ -55,6 +55,7 @@ public class MonitoringConfigServiceImpl implements MonitoringConfigService {
             config.setDeviceId(e.getDeviceId());
             config.setItemId(e.getId());
             config.setItemName(e.getItemName());
+            config.setLevel(e.getLevel());
             return config;
         }).collect(Collectors.toList());
         return configs;

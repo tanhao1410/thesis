@@ -36,4 +36,9 @@ public class MonitoringAlarm {
      */
     private Long itemId;
 
+    /**
+     * 告警级别
+     */
+    private Integer level;
+
 }
