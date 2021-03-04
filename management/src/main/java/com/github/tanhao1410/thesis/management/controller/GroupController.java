@@ -79,7 +79,7 @@ class GroupController {
      */
     @ResponseBody
     @RequestMapping( "/delete")
-    public ResponseEntity deleteNode(@RequestParam("id") Long id) {
+    public ResponseEntity deleteGroup(@RequestParam("id") Long id) {
 
         ActionResult result = new ActionResult();
         try {
@@ -97,7 +97,7 @@ class GroupController {
      */
     @ResponseBody
     @RequestMapping( method = RequestMethod.GET)
-    public ResponseEntity getAllNetwork(UserBean user) {
+    public ResponseEntity getAllNetwork(@LoginContext UserBean user) {
 
         ActionResult result = new ActionResult();
         try {

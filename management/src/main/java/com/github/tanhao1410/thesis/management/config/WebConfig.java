@@ -11,7 +11,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import java.util.List;
 
 @Configuration
-@ComponentScan(basePackages = {"com.github.tanhao1410.thesis.user"})
+@ComponentScan(basePackages = {"com.github.tanhao1410.thesis.user","com.github.tanhao1410.thesis.email"})
 public class WebConfig extends WebMvcConfigurerAdapter {
 
     /**

@@ -8,7 +8,13 @@ import java.util.List;
 
 public interface GroupService {
 
-    GroupDO getNetworkById(String networkId) throws Exception;
+    /**
+     * 根据设备组id获取设备组信息
+     * @param groupId
+     * @return
+     * @throws Exception
+     */
+    GroupDO getNetworkById(Long groupId) throws Exception;
 
     /**
      * 创建设备组

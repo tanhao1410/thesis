@@ -1,9 +1,15 @@
 package com.github.tanhao1410.thesis.management.controller;
 
+
+
 import com.alibaba.fastjson.JSONObject;
 import com.github.tanhao1410.thesis.common.bean.ActionResult;
+import com.github.tanhao1410.thesis.common.bean.response.AlarmListResponse;
 import com.github.tanhao1410.thesis.common.domain.DeviceDO;
-import com.github.tanhao1410.thesis.management.service.DeviceService;
+import com.github.tanhao1410.thesis.common.domain.MonitoringItemDO;
+import com.github.tanhao1410.thesis.common.domain.MonitoringRuleDO;
+import com.github.tanhao1410.thesis.management.service.AlarmService;
+import com.github.tanhao1410.thesis.management.service.MonitoringItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,25 +18,24 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping("/device")
+@RequestMapping("/monitoringItem")
 @Controller
-class DeviceController {
+public class MonitoringItemController {
 
     @Autowired
-    DeviceService deviceService;
-
+    private MonitoringItemService monitoringItemService;
 
     /**
-     * 获取所有的设备
+     * 获取所有的告警
      */
     @ResponseBody
     @RequestMapping( method = RequestMethod.GET)
-    public ResponseEntity getAllDevice(@RequestParam("groupId") Long groupId) {
+    public ResponseEntity monitoringRules() {
 
         ActionResult result = new ActionResult();
         try {
-            List<DeviceDO> list = deviceService.getAllDevice(groupId);
-            return ResponseEntity.status(HttpStatus.OK).body(list);
+            List<MonitoringRuleDO> response = monitoringItemService.getMonitoringRules();
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
             result.setMsg(e.toString());
             e.printStackTrace();
@@ -39,15 +44,34 @@ class DeviceController {
     }
 
     /**
-     * 删除指定设备
+     * 新建一个采集配置
+     */
+    @ResponseBody
+    @RequestMapping( method = RequestMethod.POST)
+    public ResponseEntity createMonitoringItem(@RequestBody String json) {
+        //把json串转换成对象
+        MonitoringItemDO itemDO = JSONObject.parseObject(json, MonitoringItemDO.class);
+        ActionResult result = new ActionResult();
+        try {
+            MonitoringItemDO item = monitoringItemService.createMonitoringItem(itemDO);
+            return ResponseEntity.status(HttpStatus.OK).body(item);
+        } catch (Exception e) {
+            result.setMsg(e.toString());
+            e.printStackTrace();
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
+    }
+
+    /**
+     * 删除指定任务
      */
     @ResponseBody
     @RequestMapping( "/delete")
-    public ResponseEntity deleteNode(@RequestParam("id") Long id) {
+    public ResponseEntity deleteMonitoringItem(@RequestParam("id") Long id) {
 
         ActionResult result = new ActionResult();
         try {
-            deviceService.deleteDeviceById(id);
+            monitoringItemService.deleteMonitoringItemById(id);
             return ResponseEntity.status(HttpStatus.OK).body(null);
         } catch (Exception e) {
             result.setMsg(e.toString());
@@ -56,22 +80,5 @@ class DeviceController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
     }
 
-    /**
-     * 创建设备
-     */
-    @ResponseBody
-    @RequestMapping( method = RequestMethod.POST)
-    public ResponseEntity createNode(@RequestBody String json) {
-        //把json串转换成对象
-        DeviceDO node = JSONObject.parseObject(json,DeviceDO.class);
-        ActionResult result = new ActionResult();
-        try {
-            DeviceDO node1 = deviceService.createDevice(node);
-            return ResponseEntity.status(HttpStatus.OK).body(node1);
-        } catch (Exception e) {
-            result.setMsg(e.toString());
-            e.printStackTrace();
-        }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
-    }
+
 }

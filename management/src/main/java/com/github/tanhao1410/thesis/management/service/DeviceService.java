@@ -16,11 +16,19 @@ public interface DeviceService {
      */
     List<DeviceDO> getAllDevice(Long networkId) throws Exception;
 
-    DeviceDO createNode(DeviceDO node) throws Exception;
+    /**
+     * 创建一个设备
+     * @param node
+     * @return
+     * @throws Exception
+     */
+    DeviceDO createDevice(DeviceDO node) throws Exception;
 
-    Set<DeviceDO> getAllNetwork() throws Exception;
 
-    String getWebserverName();
-
-    void deleteNodeById(String id)throws Exception;
+    /**
+     * 删除一个设备
+     * @param id
+     * @throws Exception
+     */
+    void deleteDeviceById(Long id)throws Exception;
 }
