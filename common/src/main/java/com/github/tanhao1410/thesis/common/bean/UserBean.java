@@ -24,4 +24,9 @@ public class UserBean implements Serializable {
      */
     private String userName;
 
+    /**
+     * 是否是管理员用户
+     */
+    private boolean isAdmin;
+
 }

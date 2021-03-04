@@ -70,7 +70,6 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                     for (Cookie cookie : cookies) {
                         if (cookie.getName().equals("token")) {
                             token = cookie.getValue();
-                            System.out.println(token);
                         }
                     }
                 }

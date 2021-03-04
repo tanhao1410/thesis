@@ -70,6 +70,7 @@ public class UserBusinessServiceImpl implements IUserBusinessService {
             userBean.setUserName(userDO.getName());
 
             userBean.setId(userDO.getId());
+            userBean.setAdmin(userDO.getType() == 0);//0代表是管理员账户
             ///userBean.setRealName(userDO.getRealName());
             userBean.setToken(token);
 
@@ -94,6 +95,7 @@ public class UserBusinessServiceImpl implements IUserBusinessService {
         Map<String, Object> res = new HashMap<String, Object>();
         final UserDO tbUserDO = userDOMapper.selectByPrimaryKey(user.getId());
         res.put("userName",user.getUserName());
+        res.put("userId",user.getId());
         return ResultContentVO.Su(res);
     }
 
