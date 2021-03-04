@@ -1,15 +1,21 @@
 var ws;
-function webSocketInit(){
-    ws = new WebSocket("ws://localhost:8887/websocket");
+function webSocketInit(url){
+    ws = new WebSocket(url);
     ws.onopen = function(evn){
     };
 
     ws.onmessage = function(evn){
         var data  = $.parseJSON(evn.data);
-        for(var i =0;i <data.length;i ++){
-            var node = getNodeById(data[i].node.id);
-            //setAlarm(node);
-            setNodeAlarm(node,data[i]);
+
+        for(var key in data){
+            var node = getNodeById(parseInt(key));
+            if (node != undefined){
+                node.alarmInfo = data[key];
+                console.info(data[key])
+                if(data[key].length > 0) {
+                    setNodeAlarm(node, data[key][0].level);
+                }
+            }
         }
     };
 

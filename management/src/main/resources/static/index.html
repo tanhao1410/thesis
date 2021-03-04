@@ -10,6 +10,24 @@
     <link rel="stylesheet" href="./plugins/font-awesome/css/all.css">
     <link rel="stylesheet" href="./css/base.css">
     <link rel="stylesheet" href="./css/public.css">
+    <style type="text/css">
+        #groupTip {
+            border: 1px solid #aaa;
+            border-bottom: 0;
+            background: #eee;
+            position: absolute;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: none;
+        }
+
+        #groupTip li  {
+            display: block;
+            padding: 5px;
+            ///border-bottom: 1px solid #aaa;
+        }
+    </style>
     <script src="./plugins/vue.js"></script>
     <script src="./plugins/element-ui/lib/index.js"></script>
     <script src="./plugins/axios.js"></script>
@@ -72,7 +90,7 @@
                 <div class="summary-wrapper">
                     <el-button
                             type="primary"
-                            @click="summary()"
+                            @click="fullScreen()"
                     >
                         全屏显示
                     </el-button>
@@ -80,7 +98,23 @@
                 <div class="summary-wrapper">
                     <el-button
                             type="primary"
-                            @click="summary()"
+                            @click="zoomOut()"
+                    >
+                        放大
+                    </el-button>
+                </div>
+                <div class="summary-wrapper">
+                    <el-button
+                            type="primary"
+                            @click="zoomIn()"
+                    >
+                        缩小
+                    </el-button>
+                </div>
+                <div class="summary-wrapper">
+                    <el-button
+                            type="primary"
+                            @click="saveTopoOfPic()"
                     >
                         导出图片
                     </el-button>
@@ -120,6 +154,14 @@
 
 
     <div id="content" style="margin-left: 40px;">
+        <ul id="groupTip" style="display:none;">
+            <li><a id="groupName"></a></li>
+            <li ><a id="deviceNum"></a></li>
+            <li><a id="oneLevelNum"></a></li>
+            <li><a id="twoLevelNum"></a></li>
+            <li><a id="threeLevelNum"></a></li>
+            <li><a id="fourLevelNum"></a></li>
+        </ul>
         <canvas width="1200" height="550" id="canvas"></canvas>
     </div>
 
@@ -187,6 +229,10 @@
                 this.getCompanyData();
             },
             saveLocation,
+            fullScreen,
+            saveTopoOfPic,
+            zoomIn,
+            zoomOut,
             getTableData() {
                 this.loading = true;
                 let params = {

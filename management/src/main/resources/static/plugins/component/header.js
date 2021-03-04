@@ -40,6 +40,11 @@ Vue.component('main-header', {
                     if (!err) {
                         if (0 === res.code) {
                             this.username = res.result.name|| res.result.userName;
+                            //webSocketInit
+                            //登录成功开始进行websocket连接
+                            var webSocketUrl  = "ws://localhost:8887/websocket?userId=" + res.result.userId;
+                            console.info(webSocketUrl)
+                            webSocketInit(webSocketUrl);
                         } else if (88 === res.code) {
                             window.location.href = "/login.html"
                         } else {
