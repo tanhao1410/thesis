@@ -27,6 +27,23 @@
             padding: 5px;
             ///border-bottom: 1px solid #aaa;
         }
+
+        #deviceTip {
+            border: 1px solid #aaa;
+            border-bottom: 0;
+            background: #eee;
+            position: absolute;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: none;
+        }
+
+        #deviceTip li  {
+            display: block;
+            padding: 5px;
+        ///border-bottom: 1px solid #aaa;
+        }
     </style>
     <script src="./plugins/vue.js"></script>
     <script src="./plugins/element-ui/lib/index.js"></script>
@@ -53,14 +70,12 @@
         <div class="button-wrapper">
 
             <div class="button-wrapper-right">
-                <div class="download-wrapper">
+                <div class="summary-wrapper">
                     <el-button
-                            plain
-                            @click="bulkDownload()"
-                            :disabled="downDisable"
+                            type="primary"
+                            @click="rebackRoot()"
                     >
-                        <i class="fa fa-cloud-download-alt"></i>
-                        所有设备组
+                        返回根部
                     </el-button>
                 </div>
                 <div class="summary-wrapper">
@@ -162,6 +177,10 @@
             <li><a id="threeLevelNum"></a></li>
             <li><a id="fourLevelNum"></a></li>
         </ul>
+
+        <ul id="deviceTip" style="display:none;">
+
+        </ul>
         <canvas width="1200" height="550" id="canvas"></canvas>
     </div>
 
@@ -231,6 +250,7 @@
             saveLocation,
             fullScreen,
             saveTopoOfPic,
+            rebackRoot,
             zoomIn,
             zoomOut,
             getTableData() {

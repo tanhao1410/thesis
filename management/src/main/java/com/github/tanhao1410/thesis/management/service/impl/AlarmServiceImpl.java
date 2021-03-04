@@ -114,7 +114,7 @@ public class AlarmServiceImpl implements AlarmService {
      * @param level
      * @return
      */
-    private Integer getAlarmNum(Long groupId, Integer level) {
+    public Integer getAlarmNum(Long groupId, Integer level) {
         AtomicReference<Integer> res = new AtomicReference<>(0);
         //查询所有的设备，查询设备下所有的告警，求和。
         final DeviceDO deviceDO = new DeviceDO();
@@ -136,7 +136,7 @@ public class AlarmServiceImpl implements AlarmService {
      * @param groupId
      * @return
      */
-    private Integer getDeviceNumber(Long groupId) {
+    public Integer getDeviceNumber(Long groupId) {
         DeviceDO queryDo = new DeviceDO();
         queryDo.setGroupId(groupId);
         return deviceDOMapper.selectCountSelective(queryDo).intValue();

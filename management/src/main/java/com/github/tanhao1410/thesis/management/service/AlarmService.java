@@ -25,4 +25,8 @@ public interface AlarmService {
      * @return
      */
     List<GroupAlarmInfoResponse> groupAlarmInfo(UserBean userBean) throws Exception;
+
+    public Integer getAlarmNum(Long groupId, Integer level);
+
+    public Integer getDeviceNumber(Long groupId);
 }
