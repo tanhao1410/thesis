@@ -63,14 +63,19 @@ public class ClientHandler extends SimpleChannelInboundHandler<MessageProtocolIn
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
 
         //client端启动后，会连接服务端，并上报自身信息，包括ip，端口
-
-        //随机的发送Student 或者 Workder 对象
         MessageProtocolInfo.MessageProtocol myMessage = null;
 
         //封装设备基本信息
         final ClientInfo client = new ClientInfo();
         client.setOperationSystem(SystemInfoUtils.getOperationSystem());
         client.setManufacturer(SystemInfoUtils.getManufacturer());
+
+        //补充发送额外信息
+        client.setDeviceName(this.client.getDeviceName());
+        client.setMonitoringConfigs(this.client.getMonitoringConfig().getConfigs());
+        client.setGroupName(this.client.getGroupName());
+        client.setPort(this.client.getLocalPort());
+
         final String clientInfoStr = JSON.toJSONString(client);
 
         myMessage = MessageProtocolInfo.MessageProtocol.newBuilder()

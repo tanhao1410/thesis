@@ -1,5 +1,6 @@
 package com.github.tanhao1410.thesis.client.netty;
 
+import com.github.tanhao1410.thesis.client.config.MonitoringConfig;
 import com.github.tanhao1410.thesis.client.handler.ClientHandler;
 import com.github.tanhao1410.thesis.protocol.MessageProtocolInfo;
 import io.netty.bootstrap.Bootstrap;
@@ -10,10 +11,13 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.protobuf.ProtobufDecoder;
 import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import io.netty.handler.timeout.IdleStateHandler;
+import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
 
 @Service("nettyClient")
@@ -27,7 +31,19 @@ public class NettyClient {
     @Value("${netty.client.ip}")
     private String localIp;
     @Value("${netty.client.port}")
+    @Getter
     private int localPort;
+    @Value("${netty.deviceName}")
+    @Getter
+    private String deviceName;
+    @Value("${netty.groupName}")
+    @Getter
+    private String groupName;
+
+    @Resource
+    @Getter
+    private MonitoringConfig monitoringConfig;
+
     // 通过nio方式来接收连接和处理连接
     private EventLoopGroup group = new NioEventLoopGroup();
 
@@ -63,6 +79,14 @@ public class NettyClient {
             }
         });
         bootstrap.remoteAddress(host, port);
+
+        if (StringUtils.isEmpty(host) || port == 0){
+            System.out.println("请配置服务端地址!");
+        }
+
+        if(StringUtils.isEmpty(deviceName) || StringUtils.isEmpty(groupName)){
+            System.out.println("请配置本机名称和所属设备组！");
+        }
 
         bootstrap.localAddress(localIp, localPort);
         doConnect();

@@ -1,11 +1,50 @@
+monitoring:
+  configs:
+    - monitoringMethod: cpu使用率监控方法
+    #间隔时间，单位秒
+      interval: 60
+    #阈值
+      threshold: 80
+    #参数信息，部分监控方法需要，根据需要设置
+    #param
+    #告警条件，即 >,<等
+      alarmCondition: ">"
+    #监控的类型 0告警数据，3仅采集数据，不作告警
+      type: 0
+    #告警项名称
+      itemName: cpu性能告警
+    #发生告警后对于的级别
+      level: 2
+    - monitoringMethod: 内存使用率监控方法
+      #间隔时间，单位秒
+      interval: 60
+      #阈值
+      threshold: 80
+      #参数信息，部分监控方法需要，根据需要设置
+      #param
+      #告警条件，即 >,<等
+      alarmCondition: ">"
+      #监控的类型 0告警数据，3仅采集数据，不作告警
+      type: 0
+      #告警项名称
+      itemName: 内存使用率监控告警
+      #发生告警后对于的级别
+      level: 2
 netty:
+  #给本设备起的名称
+  deviceName: 测试设备1
+  #所属设备组
+  groupName: 财务部
   server:
+    #信息采集服务端的地址和ip
     port: 8888
     ip: 127.0.0.1
   client:
-    port: 10001
-    ip: 127.0.0.2
+    #本机连接信息采集服务端的地址和IP
+    port: 10003
+    ip: 127.0.0.3
 logging:
+  #日志地址
   file: logs/client.log
   level:
     root: info

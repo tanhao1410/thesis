@@ -23,6 +23,7 @@ public class SpringBeanManagement {
     public static MonitoringConfigService monitoringConfigService;
     public static ClientCommService clientCommService;
     public static ClientChannelManagment clientChannelManagment;
+    public static GroupDOMapper groupDOMapper;
 
     /**
      * 初始化Spring中的Bean，放入到该管理器中。以方便使用。
@@ -39,5 +40,6 @@ public class SpringBeanManagement {
         clientCommService = context.getBean(ClientCommService.class);
         monitoringItemDOMapper = context.getBean(MonitoringItemDOMapper.class);
         clientChannelManagment = context.getBean(ClientChannelManagment.class);
+        groupDOMapper = context.getBean(GroupDOMapper.class);
     }
 }

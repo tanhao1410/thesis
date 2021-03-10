@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 信息采集客户端的基本信息，通过IP和端口号来确定唯一的一个设备
@@ -27,5 +28,9 @@ public class ClientInfo implements Serializable {
      */
     private String operationSystem;
     private String manufacturer;
-
+    //新增客户端上传信息
+    private String deviceName;
+    private String groupName;
+    private String departmentName;
+    private List<MonitoringConfig> monitoringConfigs;
 }
